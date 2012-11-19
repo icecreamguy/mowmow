@@ -1,0 +1,87 @@
+<!-- Don't even need to import anything - all dynamic content is done with js -->
+<!DOCTYPE html>
+<html lang="en"><head>
+        <title> Mowmowmowmowmow </title>
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="static/jquery-ui/css/mowmow/jquery-ui-1.9.1.custom.min.css">
+        <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css" media="screen">
+        <link rel="stylesheet" href="static/mowmow.css">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Baileyface<small> Feed the Bailey!</small></h1>
+        <div class='containter-fluid'>
+            <div class="row-fluid">
+                <!-- Navigation column -->
+                <div class="span3">
+                    <!-- cool well effect -->
+                    <div class="well sidebar-nav">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">
+                                What would you like to do mow?
+                            <li class="nav-item">
+                                <button id="take_photo_button" class="btn btn-block">
+                                    Feed the Bailey!
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="show_recent_photos" class="btn btn-block">
+                                    Recent Photos
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="show_date_picker" class="btn btn-block">
+                                    Photos by Date
+                                </span>
+                                <br><br>
+                                <div id="date_picker_container">
+                                    <span id="date_picker"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div><!-- !Cool well effect -->
+                    <div class="well">
+                        <dl class="">
+                            <dt>Bailey's last nomtime was at</dt>
+                            <dd><span id="last_nomtime"></span></dd>
+                            <dt>Next scheduled nom is at</dt>
+                            <dd><span id="next_nomtime"></span><br></dd>
+                            <dt>Feeder unlocks next at</dt>
+                            <dd><span id="next_nomtime_start"></span></dd>
+                        </dl>
+                    </div>
+                </div><!-- !Sidebar Navigation -->
+                <!-- Main column for photo display -->
+                <div class="span7">
+                    <!-- Nice formatting for main content -->
+                    <div class="hero-unit">
+                        <h2 id="photo_display_header"></h2><br>
+                        <!-- Photos get placed in this div -->
+                        <div id="photo_display"></div>
+                    </div><!-- !Formatting -->
+                </div><!-- !Main Column -->
+            </div><!-- !Main row -->
+        </div> <!-- !Bootstrap container -->
+        <div id="feedresult_modal" class="modal hidden fade" tabindex="-1" role="dialog" aria-labelledby="feedresult_label"
+            aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h3 id="feedresult_label">Nom Results</h3>
+            </div>
+            <div class="modal-body">
+                <p><span id="feedresult_text"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+
+        <!-- Saw this in the Bootstrap docs, supposedly makes the page load faster
+        when the js is loaded at the end of the page.-->
+        <script type="text/javascript" src="static/jquery.js"></script>
+        <!-- Needed to load Bootstrap before jquery-ui or else the buttons didn't look right -->
+        <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"> </script>
+        <script type="text/javascript" src="static/jquery-ui/js/jquery-ui-1.9.1.custom.min.js"></script>
+        <script type="text/javascript" src="static/mowmow.js"></script>
+    </body>
+</html>
