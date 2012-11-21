@@ -38,7 +38,10 @@ def generate_image_set(image_count, img_directory, date_strings, sleep_time,
             # levels
             time.sleep(1)
         print("Taking image " + str(image_count) + "\n")
-        camera_capture = get_image(camera)
+
+        # Throw away a number of images to let the camera adjust to the light
+        for i in xrange(30):
+            camera_capture = get_image(camera)
         filename = ('kitteh-' + date_strings.current_time +
                 '-' + str(image_count) + ".png")
         file = os.path.join(img_directory, filename)

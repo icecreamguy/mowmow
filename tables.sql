@@ -1,4 +1,4 @@
-USE mowmow_test;
+USE mowmow;
 
 DROP TABLE IF EXISTS photo;
 DROP TABLE IF EXISTS nomnoms;

@@ -1,13 +1,13 @@
 $(document).ready(function() {
     // Pull as much as possible out of the DOM into variables
-    buttons = $(".button");
-    show_recent_photos_button = $("#show_recent_photos");
-    show_date_picker_button = $("#show_date_picker");
-    take_photo_button = $("#take_photo_button");
-    date_picker_container = $("#date_picker_container");
-    date_picker = $('#date_picker');
-    photo_display_header = $("#photo_display_header");
-    photo_display = $('#photo_display')
+    var buttons = $(".button");
+    var show_recent_photos_button = $("#show_recent_photos");
+    var show_date_picker_button = $("#show_date_picker");
+    var take_photo_button = $("#take_photo_button");
+    var date_picker_container = $("#date_picker_container");
+    var date_picker = $('#date_picker');
+    var photo_display_header = $("#photo_display_header");
+    var photo_display = $('#photo_display')
 
     // Create buttons
     buttons.button();
@@ -56,8 +56,8 @@ $(document).ready(function() {
 });
 
 function update_recent_photos(){
-    photo_display_header.html('Recent Photos');
-    photo_display.empty().hide();
+    $("#photo_display_header").html('Recent Photos');
+    $("#photo_display").empty().hide();
     // Grab the 6 most recent photos. On success add them into the photo
     // display area
     recent_photos = $.getJSON('/photo/recent/8', function(recent_photos){
@@ -91,19 +91,18 @@ function show_photos_by_date(date){
 }
 
 function init_photo_display(section_title){
-    photo_display_header.html(section_title);
-    photo_display.empty().hide();
+    $("#photo_display_header").html(section_title);
+    $("#photo_display").empty().hide();
 }
 
 function parse_photos(photo_array){
     // Iterate over the photos and add them to the photo display div
     $.each(photo_array, function(index,photo){
         $('<img>').attr({
-            src: photo.file_path + '/' + photo.file_name,
-            class: 'photo'}).
+            'src': photo.file_path + '/' + photo.file_name, 'class': 'photo'}).
                 appendTo(photo_display);
         // Fade in the area so it looks cool
-        photo_display.fadeIn('slow');
+        $("#photo_display").fadeIn('slow');
     });
 }
 

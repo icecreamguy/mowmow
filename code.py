@@ -36,41 +36,11 @@ class nomnom:
     def POST(self):
         data = web.input()
 
-        if 'feed' in data:
-            schedule = mow_utils.schedule()
-            status = mow_utils.get_status(db, schedule)
-            nomnom_result = {}
-
-            #if status['lock']:
-               # return json.dumps({'result': 'locked'})
-
-            # There are timestamp data associated with this specific image set. I 
-            # plan to elimitate this in the future
-            date_strings = mow_utils.date_strings()
-
-            img_folder = mow_utils.make_imgfolder_string(img_root, date_strings)
-
-            if not os.path.exists(img_folder):
-                mow_utils.mkdir_p(img_folder)
-
-            # Make an entry in the nomnoms table for this feeding. The images will
-            # be associated with this record
-            nomnom_id = db.insert('nomnoms')
-
-            #Feed the baileycat
-            mow_utils.activate_feeder()
-
-            # Fire up the camera!
-            camera = camowra.init_camera()
-
-            # Grab a set of photos
-            camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
-                    nomnom_id)
-
-            # delete the camera object
-            del(camera)
-
-            return json.dumps(nomnom_result)
+        # There are timestamp data associated with this specific image set. I 
+        # plan to elimitate this in the future
+        date_strings = mow_utils.date_strings()
+        response = mow_utils.feed_cycle(data, schedule, date_strings)
+        return response
 
 # Any requests for the location of photos come here. So far it can return photos by
 # date or as a list of the most recent photos

@@ -1,3 +1,5 @@
+import sys
+sys.path.append('.')
 import os
 import re
 import errno
@@ -8,6 +10,7 @@ import pytz
 import json
 import config
 import serial
+import camowra
 
 # Two capture groups - the date string and the number of recent photos. Only one
 # group is active at a time. Example strings:
@@ -52,8 +55,7 @@ def make_imgfolder_string(img_root, date_strings):
             date_strings.current_month, date_strings.current_day)
 
 def folder_string_from_mysql(mysql_date_string):
-    return re.sub('-','/',str(mysql_date_string))
-
+    return re.sub('-','/',str(mysql_date_string)) 
 def obj_from_photo_path(path):
     request = {}
     photo_path_regex = re.compile(photo_path_regex_string)
@@ -164,6 +166,41 @@ def get_status(db, schedule):
                 # started
                 status['lock'] = 0
     return status
+
+def feed_cycle(data, schedule, date_strings):
+    if 'feed' in data:
+        db = config.db
+        img_root = config.img_root
+        status = get_status(db, schedule)
+        nomnom_result = {}
+
+        #if status['lock']:
+            #return json.dumps({'result': 'locked'})
+
+        img_folder = make_imgfolder_string(img_root, date_strings)
+
+        if not os.path.exists(img_folder):
+            mkdir_p(img_folder)
+
+        # Make an entry in the nomnoms table for this feeding. The images will
+        # be associated with this record
+        nomnom_id = db.insert('nomnoms')
+
+        #Feed the baileycat
+        print('Activating feeder...')
+        #activate_feeder()
+
+        # Fire up the camera!
+        camera = camowra.init_camera()
+
+        # Grab a set of photos
+        camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
+                nomnom_id)
+
+        # delete the camera object
+        del(camera)
+
+        return json.dumps(nomnom_result)
 
 # This function is ugly as hell right now, but I have an actual need to feed Bailey
 # on vacation, so i'm leaving it as-is for now
