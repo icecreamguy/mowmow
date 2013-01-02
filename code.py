@@ -1,7 +1,7 @@
 import sys
-sys.path.append('./mowlib')
-sys.path.append('.')
 import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'mowlib'))
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 import web
 import camowra
 import mow_utils
@@ -15,7 +15,7 @@ schedule = mow_utils.schedule()
 
 # Not actually passing anything to the template renderer yet, not sure if I ever
 # will
-render = web.template.render('templates/')
+render = web.template.render(os.path.join(os.path.dirname(__file__),'templates/'))
 
 urls = (
     '/nomnom', 'nomnom',
@@ -39,6 +39,7 @@ class nomnom:
         # There are timestamp data associated with this specific image set. I 
         # plan to elimitate this in the future
         date_strings = mow_utils.date_strings()
+        schedule = mow_utils.schedule()
         response = mow_utils.feed_cycle(data, schedule, date_strings)
         return response
 
@@ -70,6 +71,9 @@ class status:
         return json.dumps(mow_utils.get_status(config.db, mow_utils.schedule()),
                 cls=mow_utils.webpy_db_encoder)
 
-if __name__ == "__main__":
-    app = web.application(urls, globals())
-    app.run()
+# If running with WSGI and Apache, leave the following line. Otherwise, comment it
+# out and enable the if block below it
+application = web.application(urls, globals()).wsgifunc()
+#if __name__ == "__main__":
+#    application = web.application(urls, globals())
+#    application.run()
