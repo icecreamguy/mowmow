@@ -1,11 +1,13 @@
 import web
+from os import path
 from datetime import datetime, timedelta
 import time
 from dateutil import tz
 
-db = web.database(dbn='mysql', user='mowmow', pw='CHANGE THIS',
+db = web.database(dbn='mysql', user='mowmow', pw='CHANGE ME',
         db='mowmow')
 img_root = 'static/img/mrow'
+dir_base = path.dirname(__file__)
 
 camera_port = 0
 

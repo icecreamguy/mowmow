@@ -25,6 +25,7 @@ def get_image(camera):
 def generate_image_set(image_count, img_directory, date_strings, sleep_time,
         camera, nomnom_id):
 
+    dir_base = config.dir_base
     while image_count > 0:
         # For now I am opening and closing the camera for each photo. This is
         # probably not ideal, but I have been having some problems with clearing
@@ -44,11 +45,12 @@ def generate_image_set(image_count, img_directory, date_strings, sleep_time,
             camera_capture = get_image(camera)
         filename = ('kitteh-' + date_strings.current_time +
                 '-' + str(image_count) + ".png")
-        file = os.path.join(img_directory, filename)
+        file = os.path.join(dir_base, img_directory, filename)
         # A nice feature of the SaveImage method is that it will automatically
         # choose the correct format based on the file extension you provide.
         # Convenient!
         cv2.imwrite(file, camera_capture)
+        print(file)
         db.insert('photo',
                 file_name=filename,
                 file_path=img_directory,
