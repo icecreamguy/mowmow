@@ -1,5 +1,5 @@
 .photo{
-    width: 150px;
+    width: 200px;
     padding: 2px;
 }
 body{
@@ -15,4 +15,12 @@ body{
 .button{
     width: 80%;
     height: 30px;
+}
+#loading_img{
+    position: relative;
+    display: none;
+    text-align: center;
+}
+#loading_img img{
+    width: 50px;
 }

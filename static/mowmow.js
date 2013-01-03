@@ -7,7 +7,8 @@ $(document).ready(function() {
     var date_picker_container = $("#date_picker_container");
     var date_picker = $('#date_picker');
     var photo_display_header = $("#photo_display_header");
-    var photo_display = $('#photo_display')
+    var photo_display = $('#photo_display');
+    var loading_img = $('#loading_img');
 
     // Create buttons
     buttons.button();
@@ -31,23 +32,25 @@ $(document).ready(function() {
         // Activate the camera. if the camera class loads with a POST dictionary
         // key of "capture" it will take a photo. The value doesn't actually do
         // anything
+        loading_img.show();
         $.post('nomnom', { feed: 1 }, function(data){
             // After we get a (hopfully successful) response back, load/reload the
             // recent photos area.
             // TODO 
             // Add some error handling here
-            result = $.parseJSON(data)
+            result = $.parseJSON(data);
             if (result.result == 'locked'){
                 $('#feedresult_text').html('Feeder locked! Bailey\'s either already\
-                    been fed, or it isn\'t time to feed her yet.')
-                    $('#feedresult_modal').modal('show')
+                    been fed, or it isn\'t time to feed her yet.');
+                $('#feedresult_modal').modal('show');
             }
             else{
                 $('#feedresult_text').html('Bailey fed! Check the photos to make\
-                    sure she\'s still adorable. Which she is. Duh.')
-                    $('#feedresult_modal').modal('show')
+                    sure she\'s still adorable. Which she is. Duh.');
+                $('#feedresult_modal').modal('show');
                 update_recent_photos();
             }
+            loading_img.hide();
         });
     });
 
@@ -60,7 +63,7 @@ function update_recent_photos(){
     $("#photo_display").empty().hide();
     // Grab the 6 most recent photos. On success add them into the photo
     // display area
-    recent_photos = $.getJSON('/photo/recent/8', function(recent_photos){
+    recent_photos = $.getJSON('/photo/recent/6', function(recent_photos){
         parse_photos(recent_photos);
     });
 
