@@ -132,7 +132,6 @@ def get_status():
                 # time
                 print('schedule: already fed')
                 status.fed = True
-                break
             else:
                 # Cat hasn't been fed today, or was fed at an earlier cycle
                 print('schedule: not fed')
@@ -178,7 +177,7 @@ def feed_cycle(data, date_strings):
         status = get_status()
         nomnom_result = {}
 
-        if status['lock'] == 1:
+        if status['lock']:
             return json.dumps({'result': 'locked'})
 
         img_folder = make_imgfolder_string(img_root, date_strings)
@@ -194,7 +193,7 @@ def feed_cycle(data, date_strings):
 
         #Feed the baileycat
         print('Activating feeder...')
-        #activate_feeder()
+        activate_feeder()
 
         # Fire up the camera!
         camera = camowra.init_camera()
