@@ -1,10 +1,10 @@
-.photo{
-    width: 200px;
-    padding: 2px;
-}
 body{
     padding-top: 60px;
     padding-bottom: 40px;
+}
+.photo{
+    width: 200px;
+    padding: 2px;
 }
 .sidebar-nav {
     padding: 9px 0;
