@@ -5,12 +5,12 @@ import re
 import errno
 from datetime import datetime, date, timedelta
 import time
-from pytz import timezone
-import pytz
 import json
 import config
+from config import nom_cycles
 import serial
 import camowra
+from web import utils
 
 # Two capture groups - the date string and the number of recent photos. Only one
 # group is active at a time. Example strings:
@@ -56,6 +56,7 @@ def make_imgfolder_string(img_root, date_strings):
 
 def folder_string_from_mysql(mysql_date_string):
     return re.sub('-','/',str(mysql_date_string)) 
+
 def obj_from_photo_path(path):
     request = {}
     photo_path_regex = re.compile(photo_path_regex_string)
@@ -77,102 +78,104 @@ class webpy_db_encoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d')
         return json.JSONEncoder.default(self, obj)
 
-# Simple function to determine if it is past noon. I don't think I'm using this
-# anymore and will probably remove it
-def is_morning():
-    schedule = config.schedule()
-    date_time = datetime.utcnow()
-    if date_time.hour < schedule.noon.hour:
-        return 1
+def strphour(hour_string):
+    return datetime.strptime(hour_string, '%H:%M').time()
+
+def get_status():
+
+    status = utils.storage()
+    status.fed = False
+    status.fed_today = False
+    status.lock = True
+    # This variable will keep track of whether or not the next feeding time occurs
+    # today, or tomorrow
+    status.next_start_day = 'Today'
+    # List to be used in next-feed-time calculations
+    nom_times_left = []
+
+    db_last_nom = list(config.db.select('nomnoms',
+        what='time_stamp',
+        limit=1,
+        order='time_stamp DESC'
+    ))
+
+    # If there are no DB entries at least set some date for the last feeding time
+    if db_last_nom.__len__() < 1:
+        status.last_nomtime = datetime(2000, 1, 1, 0, 0)
     else:
-        return 0
+        status.last_nomtime = db_last_nom[0].time_stamp
 
-# This class initializes the schedule times in the config into datetime objects, 
-# and provides a method for converting them to UTC when sent to the frontend
-class schedule:
-    def __init__(self):
-        self.date_time = datetime.today()
-        self.today = datetime.strftime(self.date_time.date(), '%Y-%m-%d ')
-        self.noon = datetime.strptime(self.today + config.noon, config.time_format)
-        self.morning_start = datetime.strptime(self.today + config.morning_start,
-                config.time_format)
-        self.morning_end = datetime.strptime(self.today + config.morning_end,
-                config.time_format)
-        self.evening_start = datetime.strptime(self.today + config.evening_start,
-                config.time_format)
-        self.evening_end = datetime.strptime(self.today + config.evening_end,
-                config.time_format)
+    time_now = datetime.today().time()
+    day_now = datetime.today().date()
 
-    # Saw this on StackOverflow at
-    # http://stackoverflow.com/questions/4770297/python-convert-utc-datetime-string-to-local-datetime
-    # by user Joe Holloway. Thanks, Joe!
+    if status.last_nomtime.date() == day_now:
+        status.fed_today = True
+
+    print('schedule: time_now is ' + time_now.strftime('%H:%M:%S'))
+    print('schedule: last_nomtime was ' + str(status.last_nomtime))
+    print(status.last_nomtime).time()
+
+    # Main loop here - figure out if we're in a feed cycle, if we are then has the 
+    # cat already been fed? When does it get fed next?
+    for cycle_name in nom_cycles.iterkeys():
+        start = nom_cycles[cycle_name]['start']
+        end = nom_cycles[cycle_name]['end']
+        print('schedule: checking if in ' +\
+                cycle_name + ' cycle, starts at ' +\
+                start + ' and ends at ' + end
+        )
+        if time_now > strphour(start) and time_now < strphour(end):
+            # it's after the cycle start and before the cycle end
+            print('in ' + cycle_name)
+            if status.last_nomtime.time() > strphour(start) and status.fed_today:
+                # The last feeding was today and the time was after this cycle start
+                # time
+                print('schedule: already fed')
+                status.fed = True
+                break
+            else:
+                # Cat hasn't been fed today, or was fed at an earlier cycle
+                print('schedule: not fed')
+                status.lock = False
+        else:
+            print('schedule: not in ' + cycle_name)
+
+        # Already in the loop, why not build this list of remaining nom_times here?
+        if strphour(start) > time_now:
+            nom_times_left.append(cycle_name)
+
+    if len(nom_times_left) == 0:
+        # There are no more nom times left today, set the next_start_day to
+        # tomorrow, and set the nom_times_left list to the original nom_cycles list
+        status.next_start_day = 'Tomorrow'
+        nom_times_left = list(nom_cycles.iterkeys())
+    # At this point, if we sort the list of nom_times_left on the start time, the 
+    # first position in the list should be the next cycle the feeder will unlock,
+    # and the next_start_day variable should be accurate.
+    nom_times_left.sort(key=lambda cycle_name:
+        nom_cycles[cycle_name]['start']
+    )
+    next_cycle = nom_times_left[0]
+    status.next_nom_start = nom_cycles[next_cycle]['start']
+    status.next_nom_end = nom_cycles[next_cycle]['end']
+    print(status)
+    return status
+
+# Saw this on StackOverflow at
+# http://stackoverflow.com/questions/4770297/python-convert-utc-datetime-string-to-local-datetime
+# by user Joe Holloway. Thanks, Joe!
     def local_to_utc(self, datetime):
         local_tz = tz.tzlocal()
         utc_tz = tz.tzutc()
         datetime = datetime.replace(tzinfo=local_tz)
         return datetime.astimezone(utc_tz)
 
-def get_status(db, schedule):
-    status = {}
-    dbresponse = db.select('nomnoms',
-            what='time_stamp',
-            limit=1,
-            order='time_stamp DESC')
-    dbresponse = list(dbresponse)
-    # If there are no DB entries at least set some date for the last feeding time
-    if dbresponse.__len__() < 1:
-        last_nomtime_time = datetime(2000, 1, 1, 0, 0)
-    else:
-        last_nomtime_time = dbresponse[0].time_stamp
-    now = schedule.date_time
-    status['last_nomtime'] = last_nomtime_time
-
-    # Assume that the feeder is locked. The logic below will unlock it only under 
-    # specific circumstances
-    status['lock'] = 1
-
-    # Start out with the morning, which is calculated as any time "today" earlier
-    # than the end of the morning feeding time
-    if (now < schedule.morning_end):
-        status['tod'] = 'morning'
-        if last_nomtime_time > schedule.morning_start:
-            # The cat has been fed for the morning
-            status['fed'] = 1
-            status['next_nom_time'] = schedule.evening_end
-            status['next_nom_start'] = schedule.evening_start
-        else:
-            # The cat has not yet been fed
-            status['fed'] = 0
-            status['next_nom_time'] = schedule.morning_end
-            status['next_nom_start'] = schedule.evening_start
-            if now > schedule.morning_start:
-                # The cat has not yet been fed AND the morning feeding time has
-                # started
-                status['lock'] = 0
-    else:
-        status['tod'] = 'evening'
-        if last_nomtime_time > schedule.evening_start:
-            # The cat has been fed
-            status['fed'] = 1
-            status['next_nom_time'] = schedule.morning_end + timedelta(days=1)
-            status['next_nom_start'] = schedule.morning_start + timedelta(days=1)
-        else:
-            # The cat has not been fed yet
-            status['fed'] = 0
-            status['next_nom_time'] = schedule.evening_end
-            status['next_nom_start'] = schedule.evening_start
-            if now > schedule.evening_start:
-                # The cat has not yet been fed AND the evening feeding time has
-                # started
-                status['lock'] = 0
-    return status
-
-def feed_cycle(data, schedule, date_strings):
+def feed_cycle(data, date_strings):
     if 'feed' in data:
         db = config.db
         img_root = config.img_root
         dir_base = config.dir_base
-        status = get_status(db, schedule)
+        status = get_status()
         nomnom_result = {}
 
         if status['lock'] == 1:
@@ -191,7 +194,7 @@ def feed_cycle(data, schedule, date_strings):
 
         #Feed the baileycat
         print('Activating feeder...')
-        activate_feeder()
+        #activate_feeder()
 
         # Fire up the camera!
         camera = camowra.init_camera()

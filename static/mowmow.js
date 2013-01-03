@@ -67,22 +67,30 @@ function update_recent_photos(){
         parse_photos(recent_photos);
     });
 
-    function setup(){
-        $.getJSON('status', function(mow_status){
-            next_nom_time = new Date(Date.parse(mow_status.next_nom_time));
-            next_nom_start = new Date(Date.parse(mow_status.next_nom_start));
-            last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
-            $('#next_nomtime').html(next_nom_time.toLocaleTimeString() + ' on ' +
-                next_nom_time.toDateString());
-            $('#next_nomtime_start').html(next_nom_start.toLocaleTimeString() + ' on ' +
-                next_nom_start.toDateString());
-            $('#last_nomtime').html(last_nomtime.toLocaleTimeString() + ' on ' +
-                last_nomtime.toDateString());
-        });
-    }
-
     setup();
 }
+
+function setup(){
+    $.getJSON('status', function(mow_status){
+        next_nom_end = new Date(Date.parse(mow_status.next_nom_end));
+        next_nom_start = new Date(Date.parse(mow_status.next_nom_start));
+        last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
+        next_start_day = mow_status.next_start_day;
+        $('#next_nom_start').html(next_nom_start.toLocaleTimeString());
+        $('#next_nom_end').html(next_nom_end.toLocaleTimeString());
+        $('#next_start_day').html(next_start_day);
+        $('#last_nomtime').html(last_nomtime.toLocaleTimeString() + ' on ' +
+            last_nomtime.toDateString());
+        if (mow_status.lock) {
+            can_feed_status = "No";
+        }
+        else {
+            can_feed_status = "Yes";
+        }
+        $('#feeder_lock').html(can_feed_status);
+    });
+}
+
 
 function show_photos_by_date(date){
     init_photo_display('Photos From ' + date);

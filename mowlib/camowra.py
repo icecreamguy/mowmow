@@ -49,7 +49,7 @@ def generate_image_set(image_count, img_directory, date_strings, sleep_time,
         # A nice feature of the SaveImage method is that it will automatically
         # choose the correct format based on the file extension you provide.
         # Convenient!
-        cv2.imwrite(file, camera_capture)
+        cv2.imwrite(file, camera_capture, config.compression_settings)
         print(file)
         db.insert('photo',
                 file_name=filename,
