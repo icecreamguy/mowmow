@@ -29,7 +29,7 @@ def mkdir_p(path):
     try:
         os.makedirs(path)
     except OSError as exceptn:
-        if exceptn.errno == erno.EEXIST:
+        if exceptn.errno == errno.EEXIST:
             pass
         else:
             raise
@@ -171,16 +171,19 @@ def feed_cycle(data, schedule, date_strings):
     if 'feed' in data:
         db = config.db
         img_root = config.img_root
+        dir_base = config.dir_base
         status = get_status(db, schedule)
         nomnom_result = {}
 
-        #if status['lock']:
-            #return json.dumps({'result': 'locked'})
+        if status['lock'] == 1:
+            return json.dumps({'result': 'locked'})
 
         img_folder = make_imgfolder_string(img_root, date_strings)
+        print(img_folder)
+        img_folder_abs = os.path.join(dir_base, img_folder)
 
-        if not os.path.exists(img_folder):
-            mkdir_p(img_folder)
+        if not os.path.exists(img_folder_abs):
+            mkdir_p(img_folder_abs)
 
         # Make an entry in the nomnoms table for this feeding. The images will
         # be associated with this record
@@ -188,7 +191,7 @@ def feed_cycle(data, schedule, date_strings):
 
         #Feed the baileycat
         print('Activating feeder...')
-        #activate_feeder()
+        activate_feeder()
 
         # Fire up the camera!
         camera = camowra.init_camera()
