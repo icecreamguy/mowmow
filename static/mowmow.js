@@ -38,7 +38,7 @@ $(document).ready(function() {
             // recent photos area.
             // TODO 
             // Add some error handling here
-            result = $.parseJSON(data);
+            var result = $.parseJSON(data);
             if (result.result == 'locked'){
                 $('#feedresult_text').html('Feeder locked! Bailey\'s either already\
                     been fed, or it isn\'t time to feed her yet.');
@@ -63,7 +63,7 @@ function update_recent_photos(){
     $("#photo_display").empty().hide();
     // Grab the 6 most recent photos. On success add them into the photo
     // display area
-    recent_photos = $.getJSON('/photo/recent/6', function(recent_photos){
+    var recent_photos = $.getJSON('/photo/recent/6', function(recent_photos){
         parse_photos(recent_photos);
     });
 
@@ -72,10 +72,10 @@ function update_recent_photos(){
 
 function setup(){
     $.getJSON('status', function(mow_status){
-        next_nom_end = new Date(Date.parse(mow_status.next_nom_end));
-        next_nom_start = new Date(Date.parse(mow_status.next_nom_start));
-        last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
-        next_start_day = mow_status.next_start_day;
+        var next_nom_end = new Date(Date.parse(mow_status.next_nom_end));
+        var next_nom_start = new Date(Date.parse(mow_status.next_nom_start));
+        var last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
+        var next_start_day = mow_status.next_start_day;
         $('#next_nom_start').html(next_nom_start.toLocaleTimeString());
         $('#next_nom_end').html(next_nom_end.toLocaleTimeString());
         $('#next_start_day').html(next_start_day);
@@ -96,7 +96,7 @@ function show_photos_by_date(date){
     init_photo_display('Photos From ' + date);
     // Grab a list of the photos from the specified date. On success add them
     // into the photo display area
-    photos_from_date = $.getJSON('photo/date/' + date, function(photos_from_date){
+    var photos_from_date = $.getJSON('photo/date/' + date, function(photos_from_date){
         parse_photos(photos_from_date);
     });
 }
