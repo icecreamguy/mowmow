@@ -2,10 +2,6 @@ body{
     padding-top: 60px;
     padding-bottom: 40px;
 }
-.photo{
-    width: 200px;
-    padding: 2px;
-}
 .sidebar-nav {
     padding: 9px 0;
 }
@@ -23,7 +19,4 @@ body{
 }
 #loading_img img{
     width: 50px;
-}
-#ui-datepicker-div{
-    z-index: 9999999;
 }

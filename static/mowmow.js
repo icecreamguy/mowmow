@@ -7,7 +7,7 @@ $(document).ready(function() {
     var date_picker_container = $("#date_picker_container");
     var date_picker = $('#date_picker');
     var photo_display_header = $("#photo_display_header");
-    var photo_display = $('#photo_display');
+    var thumbs = $('#thumbs');
     var loading_img = $('#loading_img');
 
     // Create buttons
@@ -60,7 +60,7 @@ $(document).ready(function() {
 
 function update_recent_photos(){
     $("#photo_display_header").html('Recent Photos');
-    $("#photo_display").empty().hide();
+    $("#thumbs").empty().hide();
     // Grab the 6 most recent photos. On success add them into the photo
     // display area
     var recent_photos = $.getJSON('/photo/recent/6', function(recent_photos){
@@ -103,18 +103,27 @@ function show_photos_by_date(date){
 
 function init_photo_display(section_title){
     $("#photo_display_header").html(section_title);
-    $("#photo_display").empty().hide();
+    $("#thumbs").empty().hide();
 }
 
 function parse_photos(photo_array){
     // Iterate over the photos and add them to the photo display div
+    var photo_template = $('#photo_template').html();
     $.each(photo_array, function(index,photo){
-        $('<img>').attr({
-            'src': photo.file_path + '/' + photo.file_name, 'class': 'photo'}).
-                appendTo(photo_display);
+//        $('<img>').attr({
+//            'src': photo.file_path + '/' + photo.file_name, 'class': 'photo'}).
+//                appendTo(photo_display);
+        $('#thumbs').append(Mustache.to_html(photo_template, photo));
         // Fade in the area so it looks cool
-        $("#photo_display").fadeIn('slow');
+        $("#thumbs").fadeIn('slow');
     });
+    // Fix for bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
+    // on the bootstrap bug tracker
+    (function($){
+        $('.row-fluid ul.thumbnails li.span6:nth-child(2n + 3)').css('margin-left','0px');
+        $('.row-fluid ul.thumbnails li.span4:nth-child(3n + 4)').css('margin-left','0px');
+        $('.row-fluid ul.thumbnails li.span3:nth-child(4n + 5)').css('margin-left','0px'); 
+    })(jQuery);
 }
 
 function print_r(objects){
