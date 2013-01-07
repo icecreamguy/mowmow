@@ -1,6 +1,7 @@
 body{
     padding-top: 60px;
     padding-bottom: 40px;
+    background: url(/static/img/use_your_illusion.png) repeat 0 0;
 }
 .sidebar-nav {
     padding: 9px 0;
@@ -16,7 +17,23 @@ body{
     position: relative;
     display: none;
     text-align: center;
+    color: #ced1d4;
 }
 #loading_img img{
     width: 50px;
+}
+.well{
+    background: url(/static/img/shattered.png) repeat 0 0;
+}
+h2{
+    color: #ced1d4;
+}
+h1{
+    color: #ced1d4;
+}
+.nav-header{
+    color: #3c4044;
+}
+.thumbnail{
+    border-color: #3c4044;
 }
