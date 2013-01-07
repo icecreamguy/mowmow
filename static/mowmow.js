@@ -73,9 +73,9 @@ $(document).ready(function() {
 function update_recent_photos(){
     $("#photo_display_header").html('Recent Photos');
     $("#thumbs").empty().hide();
-    // Grab the 6 most recent photos. On success add them into the photo
+    // Grab the 8 most recent photos. On success add them into the photo
     // display area
-    $.getJSON('/photo/recent/6', function(recent_photos){
+    $.getJSON('/photo/recent/8', function(recent_photos){
         current_photos = recent_photos;
         parse_photos();
     });
