@@ -89,7 +89,7 @@ def get_status():
     status.lock = True
     # This variable will keep track of whether or not the next feeding time occurs
     # today, or tomorrow
-    status.next_start_day = 'Today'
+    status.next_start_day = 'today'
     # List to be used in next-feed-time calculations
     nom_times_left = []
 
@@ -146,7 +146,7 @@ def get_status():
     if len(nom_times_left) == 0:
         # There are no more nom times left today, set the next_start_day to
         # tomorrow, and set the nom_times_left list to the original nom_cycles list
-        status.next_start_day = 'Tomorrow'
+        status.next_start_day = 'tomorrow'
         nom_times_left = list(nom_cycles.iterkeys())
     # At this point, if we sort the list of nom_times_left on the start time, the 
     # first position in the list should be the next cycle the feeder will unlock,
