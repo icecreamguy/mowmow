@@ -1,3 +1,5 @@
+var current_photos = "";
+
 $(document).ready(function() {
     // Pull as much as possible out of the DOM into variables
     var buttons = $(".button");
@@ -9,6 +11,7 @@ $(document).ready(function() {
     var photo_display_header = $("#photo_display_header");
     var thumbs = $('#thumbs');
     var loading_img = $('#loading_img');
+    var thumbnails_list = $('#thumbs');
 
     // Create buttons
     buttons.button();
@@ -54,6 +57,15 @@ $(document).ready(function() {
         });
     });
 
+    // Attach click event handler on all future individual photos to show
+    // a modal with that photo
+    thumbnails_list.on("click", "li div", function (event) {
+        src = $(this).children('img').attr('src');
+        index = $(this).children('img').attr('data-photo_id');
+        label = $(this).children('span').html();
+        show_photo(current_photos[index])
+    });
+
     //Update the recent photos area on page load
     update_recent_photos();
 });
@@ -63,8 +75,9 @@ function update_recent_photos(){
     $("#thumbs").empty().hide();
     // Grab the 6 most recent photos. On success add them into the photo
     // display area
-    var recent_photos = $.getJSON('/photo/recent/6', function(recent_photos){
-        parse_photos(recent_photos);
+    $.getJSON('/photo/recent/6', function(recent_photos){
+        current_photos = recent_photos;
+        parse_photos();
     });
 
     setup();
@@ -96,8 +109,9 @@ function show_photos_by_date(date){
     init_photo_display('Photos From ' + date);
     // Grab a list of the photos from the specified date. On success add them
     // into the photo display area
-    var photos_from_date = $.getJSON('photo/date/' + date, function(photos_from_date){
-        parse_photos(photos_from_date);
+    $.getJSON('photo/date/' + date, function(photos_from_date){
+        current_photos = photos_from_date
+        parse_photos();
     });
 }
 
@@ -106,17 +120,16 @@ function init_photo_display(section_title){
     $("#thumbs").empty().hide();
 }
 
-function parse_photos(photo_array){
+function parse_photos(){
     // Iterate over the photos and add them to the photo display div
     var photo_template = $('#photo_template').html();
-    $.each(photo_array, function(index,photo){
-//        $('<img>').attr({
-//            'src': photo.file_path + '/' + photo.file_name, 'class': 'photo'}).
-//                appendTo(photo_display);
+    $.each(current_photos, function(index,photo){
+        photo.index = index;
         $('#thumbs').append(Mustache.to_html(photo_template, photo));
         // Fade in the area so it looks cool
         $("#thumbs").fadeIn('slow');
     });
+
     // Fix for bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
     // on the bootstrap bug tracker
     (function($){
@@ -132,4 +145,13 @@ function print_r(objects){
             alert(object + '\n' + objects[object]);
         }
     }
+}
+
+function show_photo (photo) {
+    var photo_modal = $('#photo_modal');
+    var modal_label = $('#photo_label');
+    var modal_image = $('#modal_image');
+    modal_label.html(photo.time_stamp);
+    modal_image.attr('src', (photo.file_path + '/' + photo.file_name));
+    photo_modal.modal('show');
 }

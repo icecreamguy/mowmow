@@ -85,12 +85,28 @@
             </div>
         </div>
 
+        <div id="photo_modal" class="modal hidden fade" tabindex="-1" role="dialog" aria-labelledby="photo_label"
+            aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h3 id="photo_label"></h3>
+            </div>
+            <div class="modal-body">
+                    <img id="modal_image">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+
+
         <!-- Templates -->
         <script id="photo_template" type="text/template">
             <li class="span4">
                 <div class="thumbnail">
-                    <h3>{{time_stamp}}</h>
-                    <img src="{{file_path}}/{{file_name}}" class="photo">
+                    <img src="{{file_path}}/{{file_name}}" class="photo"
+                        data-photo_id="{{index}}">
+                    <span class="label label-info">{{time_stamp}}</span>
                 </div>
             </li>
         </script>
