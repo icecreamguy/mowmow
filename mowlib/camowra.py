@@ -23,7 +23,7 @@ def get_image(camera):
 # Takes image_count number of images, which it labels as
 # mowmow<num>.png and saves to the specified directory.
 def generate_image_set(image_count, img_directory, date_strings, sleep_time,
-        camera, nomnom_id):
+        camera, cycle_name, nomnom_id):
 
     dir_base = config.dir_base
     while image_count > 0:

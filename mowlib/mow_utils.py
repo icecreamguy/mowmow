@@ -86,6 +86,8 @@ def get_status():
     # This variable will keep track of whether or not the next feeding time occurs
     # today, or tomorrow
     status.next_start_day = 'today'
+    # Cycle name will be "Unscheduled" when called outside of feeding times
+    status.cycle_name = 'unscheduled'
     # List to be used in next-feed-time calculations
     nom_times_left = []
 
@@ -123,6 +125,7 @@ def get_status():
         if time_now > strphour(start) and time_now < strphour(end):
             # it's after the cycle start and before the cycle end
             print('in ' + cycle_name)
+            status.cycle_name = cycle_name
             if status.last_nomtime.time() > strphour(start) and status.fed_today:
                 # The last feeding was today and the time was after this cycle start
                 # time
@@ -185,7 +188,8 @@ def feed_cycle(data, date_strings):
 
         # Make an entry in the nomnoms table for this feeding. The images will
         # be associated with this record
-        nomnom_id = db.insert('nomnoms')
+        nomnom_id = db.insert('nomnoms',
+                cycle_name=status.cycle_name)
 
         #Feed the baileycat
         print('Activating feeder...')
@@ -196,7 +200,7 @@ def feed_cycle(data, date_strings):
 
         # Grab a set of photos
         camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
-                nomnom_id)
+                status.cycle_name, nomnom_id)
 
         # delete the camera object
         del(camera)

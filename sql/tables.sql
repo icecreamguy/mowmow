@@ -16,4 +16,3 @@ CREATE TABLE photo(
     INDEX nomnom_index (nomnom_id),
     FOREIGN KEY (nomnom_id) REFERENCES nomnoms(id) ON DELETE CASCADE
 );
-

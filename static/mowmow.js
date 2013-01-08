@@ -125,12 +125,15 @@ function parse_photos(){
     var photo_template = $('#photo_template').html();
     $.each(current_photos, function(index,photo){
         photo.index = index;
+        if (!photo.cycle_name){
+            photo.cycle_name = 'unknown';
+        }
         $('#thumbs').append(Mustache.to_html(photo_template, photo));
         // Fade in the area so it looks cool
         $("#thumbs").fadeIn('slow');
     });
 
-    // Fix for bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
+    // Fix for margin bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
     // on the bootstrap bug tracker
     (function($){
         $('.row-fluid ul.thumbnails li.span6:nth-child(2n + 3)').css('margin-left','0px');
