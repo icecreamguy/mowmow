@@ -154,7 +154,7 @@ function show_photo (photo) {
     var photo_modal = $('#photo_modal');
     var modal_label = $('#photo_label');
     var modal_image = $('#modal_image');
-    modal_label.html(photo.time_stamp);
+    modal_label.html(photo.time_stamp + ', ' + photo.cycle_name + ' cycle');
     modal_image.attr('src', (photo.file_path + '/' + photo.file_name));
     photo_modal.modal('show');
 }
