@@ -34,14 +34,10 @@ def mkdir_p(path):
         else:
             raise
 
-# The idea was that an image "set" is taken, all of which
-# share a certain time, i.e. you can view the set of images from, say, Tuesday 
-# morning, and there are maybe 4 photos in that set. They should all share the
-# same time data. I moved most of this over to the database entry's timestamp, will
-# eliminate this later
+# Utility class for convenient date strings and date objects
 class date_strings():
     def __init__(self):
-        self.date_time = datetime.utcnow()
+        self.date_time = datetime.now()
         self.current_time = self.date_time.strftime("%H_%M_%S")
         self.current_day = self.date_time.strftime("%d")
         self.current_month = self.date_time.strftime("%m")
