@@ -156,6 +156,7 @@ def get_status():
     next_cycle = nom_times_left[0]
     status.next_nom_start = nom_cycles[next_cycle]['start']
     status.next_nom_end = nom_cycles[next_cycle]['end']
+    status.tz = time.tzname[0]
     print(status)
     return status
 

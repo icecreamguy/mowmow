@@ -85,23 +85,17 @@ function update_recent_photos(){
 
 function setup(){
     $.getJSON('status', function(mow_status){
-        var next_nom_end = new Date(Date.parse(mow_status.next_nom_end));
-        var next_nom_start = new Date(Date.parse(mow_status.next_nom_start));
-        var last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
-        var next_start_day = mow_status.next_start_day;
-        $('#next_nom_start').html(next_nom_start.toLocaleTimeString());
-        $('#next_nom_end').html(next_nom_end.toLocaleTimeString());
-        $('#next_start_day').html(next_start_day);
-        $('#last_nomtime').html(last_nomtime.toLocaleTimeString() + ' on ' +
-            last_nomtime.toDateString());
-        if (mow_status.lock) {
-            can_feed_status = "No";
-        }
-        else {
-            can_feed_status = "Yes";
-        }
-        $('#feeder_lock').html(can_feed_status);
-    });
+        var status_template = $('#status_template').html();
+
+        if (mow_status.lock){ mow_status.lock = 'No'; }
+        else{ mow_status.lock = 'Yes'; }
+
+        mow_status.last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
+        mow_status.last_nomtime = mow_status.last_nomtime.toLocaleTimeString() +
+            ' ' + mow_status.last_nomtime.toLocaleDateString();
+        
+        $('#status_area').append(Mustache.to_html(status_template, mow_status));
+   });
 }
 
 

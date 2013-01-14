@@ -40,19 +40,7 @@
                             </li>
                         </ul>
                     </div><!-- !Cool well effect -->
-                    <div class="well">
-                        <dl class="">
-                            <dt>Bailey's last nomtime was at</dt>
-                            <dd><span id="last_nomtime"></span></dd><br>
-                            <dt>The next scheduled feeding time is from</dt>
-                            <dd>
-                            <span id="next_nom_start"></span> until
-                            <span id="next_nom_end"></span> 
-                            <span id="next_start_day"></span>
-                            </dd><br>
-                            <dt>Can you click the "Feed" button RIGHT NOW?</dt>
-                            <dd><span id="feeder_lock"></span>!</dd><br>
-                        </dl>
+                    <div class="well" id="status_area">
                     </div>
                 </div><!-- !Sidebar Navigation -->
                 <!-- Main column for photo display -->
@@ -114,6 +102,22 @@
                         {{time_stamp}} <br> {{cycle_name}} cycle
                 </div>
             </li>
+        </script>
+        
+        <script id="status_template" type="text/template">
+            <dl>
+                <dt>Bailey's last nomtime was at</dt>
+                <dd>{{last_nomtime}} {{tz}}</dd><br>
+                <dt>The next scheduled feeding time is from</dt>
+                <dd>
+                    {{next_nom_start}} until
+                    {{next_nom_end}} {{tz}} 
+                    {{next_start_day}}
+                </dd>
+                <br>
+                <dt>Can you click the "Feed" button RIGHT NOW?</dt>
+                <dd>{{lock}}!</dd><br>
+            </dl>
         </script>
 
         <!-- Saw this in the Bootstrap docs, supposedly makes the page load faster
