@@ -2,6 +2,7 @@ from web import database, utils
 from os import path
 from cv2.cv import CV_IMWRITE_PNG_COMPRESSION
 
+pass_salt = "CHANGE ME!"
 db = database(dbn='mysql', user='mowmow', pw='CHANGE ME',
         db='mowmow')
 img_root = 'static/img/mrow'

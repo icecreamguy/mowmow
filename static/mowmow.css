@@ -1,6 +1,4 @@
 body{
-    padding-top: 60px;
-    padding-bottom: 40px;
     /* From subtlepatterns.com, by Mohawk Studios */
     background: url(/static/img/use_your_illusion.png) repeat 0 0;
 }
@@ -39,4 +37,10 @@ h1{
 .thumbnail{
     border-color: #3c4044;
     color: #ced1d4;
+}
+#login_form button{
+    display: inline;
+}
+.label{
+    margin: 5px;
 }

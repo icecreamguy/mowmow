@@ -77,12 +77,13 @@ class webpy_db_encoder(json.JSONEncoder):
 def strphour(hour_string):
     return datetime.strptime(hour_string, '%H:%M').time()
 
-def get_status():
-
+def get_status(auth_token):
+    print(auth_token)
     status = utils.storage()
     status.fed = False
     status.fed_today = False
     status.lock = True
+    status.authenticated = auth_user(auth_token)
     # This variable will keep track of whether or not the next feeding time occurs
     # today, or tomorrow
     status.next_start_day = 'today'
@@ -220,3 +221,82 @@ def activate_feeder():
     serial_port.write('\xff\x01\x01')
     time.sleep(1)
     serial_port.write('\xff\x01\x00')
+
+# Function to validate and create a new account
+def create_account(account_data):
+    db = config.db
+    account_creation_state = {'message': [], 'problems': 0}
+
+    for field, val in account_data.iteritems():
+        if not len(val):
+            account_creation_state['message'].append('%s cannot be blank' % field)
+
+    # Email regex from regular-expressions.info/email.html
+    email_regex = ("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*"
+                   "@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-"
+                   "z0-9])?")
+    # Check if it's a valid email address
+    if not re.compile(email_regex).match(account_data.email_field):
+        account_creation_state['message'].append('Invalid email format')
+
+    # Make sure the passords match
+    if account_data.pass_field != account_data.pass_confirm_field:
+        account_creation_state['message'].append('Passwords don\'t match')
+
+    # Make sure the user's name will fit
+    if len(account_data.name_field) > 70:
+        account_creation_state['message'].append('Name needs to be less than 70 characters')
+
+    # If everything validates, make sure that the email address hasn't already been
+    # registered.
+    if (not len(account_creation_state['message'])) and len(account_data.name_field):
+        accounts = db.select('users', account_data,
+            where = 'email = $email_field'
+        )
+        if accounts:
+            account_creation_state['message'].append('Email address already registered, contact '
+                                       'site owner to reset it, or use a different '
+                                       'email address')
+
+    # If there were any validation account_creation_state, exit here and provide them
+    if len(account_creation_state['message']):
+        account_creation_state['problems'] = 1
+        return account_creation_state
+    else:
+        # Otherwise, create the account
+        user_id = db.insert('users',
+            name = account_data.name_field,
+            email = account_data.email_field,
+            pass_hash = account_data.pass_field,
+            privilege = 0
+        )
+        account_creation_state['message'] = 'Account created!'
+        account_creation_state['token'] = generate_user_token(user_id)
+        return account_creation_state
+
+# Utility to create and return a token for user identification. Each token is linked
+# to an account and is to be stored in the browser's localstorage
+def generate_user_token (user_id):
+    import base64
+    db = config.db
+    token = base64.urlsafe_b64encode(os.urandom(99))[:100]
+
+    # Create a new token in the database, it's just a random string mapped to a user
+    db.insert('user_tokens',
+        user_id = user_id,
+        token = token
+    )
+
+    return token
+
+def auth_user(token):
+    db = config.db
+    auth = db.select('user_tokens', dict(token = token),
+        where = 'token = $token'
+    )
+    
+    if not auth[0]:
+        #This token is not valid
+        return False
+    
+    return auth[0].id
