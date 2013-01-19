@@ -19,7 +19,8 @@ urls = (
     '/nomnom', 'nomnom',
     mow_utils.date_regex_string, 'photo',
     '/status', 'status',
-    '/login', 'login',
+    '/login/?(new)?', 'login',
+    '/openid', 'openid',
     '/(.*)', 'index',
 )
 
@@ -30,12 +31,22 @@ class index:
         return render.index()
 
 class login:
-    def GET(self):
-        # Don't actually need to do anything here yet other than to return the
-        # rendered template
-        print('login')
-        return render.login()
-
+    def POST(self, req_path):
+        data = web.input()
+        print(req_path)
+        if req_path == 'new':
+            # Create new account
+            return json.dumps(mow_utils.create_account(data))
+#    def GET(self, req_path):
+#        request = req_path.split('/')
+#        print request[1]
+#        if request[0] == 'auth':
+#            if not request[1]:
+#                return 'Auth error...'
+#            # Check if a user's token is valid
+#            print('authing')
+#            return mow_utils.auth_user(request[1])
+#
 # This is where the it all happens. A call to this class will either tell the user
 # that the feeder is locked, or it will feed the cat and take photos
 class nomnom:
@@ -73,7 +84,8 @@ class photo:
 
 class status:
     def GET(self):
-        return json.dumps(mow_utils.get_status(),
+        auth_token = web.cookies().get('auth_token')
+        return json.dumps(mow_utils.get_status(auth_token),
                 cls=mow_utils.webpy_db_encoder)
 
 # out and enable the if block below it

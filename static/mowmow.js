@@ -12,6 +12,10 @@ $(document).ready(function() {
     var thumbs = $('#thumbs');
     var loading_img = $('#loading_img');
     var thumbnails_list = $('#thumbs');
+    var hidden_elements = $('.hidden');
+    var auth_token = $.cookies.get('auth_token');
+    
+    hidden_elements.hide();
 
     // Create buttons
     buttons.button();
@@ -56,6 +60,32 @@ $(document).ready(function() {
             loading_img.hide();
         });
     });
+        
+    //bind events to forms
+    $('#login_form').submit(function () {
+        $.post('login', $(this).serialize());
+        return false;
+    });
+
+    $('#new_account_form').submit(function () {
+        $.post('login/new', $(this).serialize(), function (data) {
+            if (data.problems){
+                $('#new_account_confirm').hide();
+                var alert_template = $('#new_account_alert_template').html();
+                $('#new_account_alert_text').html('')
+                $('#new_account_alert_text').append(Mustache.to_html(alert_template,
+                        data));
+                $('#new_account_alert').show();
+            }
+            else{
+                $('#new_account_alert').hide();
+                $('#new_account_modal').modal('hide');
+                $('#new_account_confirm').html(data.message).fadeIn();
+                $.cookies.set('auth_token', data.token);
+            }
+        }, "json");
+        return false;
+    });
 
     // Attach click event handler on all future individual photos to show
     // a modal with that photo
@@ -66,8 +96,18 @@ $(document).ready(function() {
         show_photo(current_photos[index])
     });
 
+    // Click handler to diplay the new account modal
+    $('#new_account').click(function () {
+        $('#new_account_modal').modal('show');
+        return false;
+    });
+
     //Update the recent photos area on page load
     update_recent_photos();
+    
+    if (auth_token) {
+        auth_user(auth_token);
+    }
 });
 
 function update_recent_photos(){
@@ -75,7 +115,7 @@ function update_recent_photos(){
     $("#thumbs").empty().hide();
     // Grab the 8 most recent photos. On success add them into the photo
     // display area
-    $.getJSON('/photo/recent/8', function(recent_photos){
+    $.getJSON('photo/recent/8', function(recent_photos){
         current_photos = recent_photos;
         parse_photos();
     });
@@ -151,4 +191,10 @@ function show_photo (photo) {
     modal_label.html(photo.time_stamp + ', ' + photo.cycle_name + ' cycle');
     modal_image.attr('src', (photo.file_path + '/' + photo.file_name));
     photo_modal.modal('show');
+}
+
+function auth_user (auth_token) {
+    $.getJSON('login/auth/' + auth_token, function () {
+        console.log('authorizing');
+    });
 }
