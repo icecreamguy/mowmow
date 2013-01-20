@@ -19,7 +19,8 @@ urls = (
     '/nomnom', 'nomnom',
     mow_utils.date_regex_string, 'photo',
     '/status', 'status',
-    '/login/?(new)?', 'login',
+    '/login/?(new|existing)?', 'login',
+    '/logout', 'logout',
     '/openid', 'openid',
     '/(.*)', 'index',
 )
@@ -33,22 +34,17 @@ class index:
 class login:
     def POST(self, req_path):
         data = web.input()
-        print(req_path)
         if req_path == 'new':
             # Create new account
             return json.dumps(mow_utils.create_account(data))
-#    def GET(self, req_path):
-#        request = req_path.split('/')
-#        print request[1]
-#        if request[0] == 'auth':
-#            if not request[1]:
-#                return 'Auth error...'
-#            # Check if a user's token is valid
-#            print('authing')
-#            return mow_utils.auth_user(request[1])
-#
-# This is where the it all happens. A call to this class will either tell the user
-# that the feeder is locked, or it will feed the cat and take photos
+        elif req_path == 'existing':
+            return json.dumps(mow_utils.login_account(data))
+
+class logout:
+    def POST(self):
+        data = web.input()
+        return mow_utils.logout_user(data.auth_token)
+
 class nomnom:
     def POST(self):
         data = web.input()

@@ -20,6 +20,11 @@
                 <!-- Navigation column -->
                 <div class="span3">
                     <div class="well">
+                        <div id="user_info" class="hidden">
+                            Logged in as <span id="user_name"></span>
+                            <br>
+                            <button id="logout" class="btn">Log Out</button>
+                        </div>
                         <!-- Login Form -->
                         <form id="login_form" >
                             <input name="email_field" type="text" 
@@ -32,9 +37,9 @@
                             <button id="new_account" class="btn">
                                 New Account
                             </button>
-                            <span id="new_account_confirm" class="label label-success hidden">
-                </span>
                         </form>
+                        <span id="user_confirm" class="label label-success hidden">
+                        </span>
                     </div>
                     <div class="well sidebar-nav">
                         <ul class="nav nav-list">

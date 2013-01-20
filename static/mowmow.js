@@ -14,6 +14,7 @@ $(document).ready(function() {
     var thumbnails_list = $('#thumbs');
     var hidden_elements = $('.hidden');
     var auth_token = $.cookies.get('auth_token');
+    var logout_button = $('#logout');
     
     hidden_elements.hide();
 
@@ -60,17 +61,27 @@ $(document).ready(function() {
             loading_img.hide();
         });
     });
+
+    logout_button.click(function(){
+        logout_user(auth_token);
+    });
         
     //bind events to forms
     $('#login_form').submit(function () {
-        $.post('login', $(this).serialize());
+        $.post('login/existing', $(this).serialize(), function (token) {
+            console.log(token);
+            if (token) {
+                auth_user(token);
+                setup();
+            }
+        });
         return false;
     });
 
     $('#new_account_form').submit(function () {
         $.post('login/new', $(this).serialize(), function (data) {
             if (data.problems){
-                $('#new_account_confirm').hide();
+                $('#user_confirm').hide();
                 var alert_template = $('#new_account_alert_template').html();
                 $('#new_account_alert_text').html('')
                 $('#new_account_alert_text').append(Mustache.to_html(alert_template,
@@ -80,8 +91,9 @@ $(document).ready(function() {
             else{
                 $('#new_account_alert').hide();
                 $('#new_account_modal').modal('hide');
-                $('#new_account_confirm').html(data.message).fadeIn();
+                $('#user_confirm').html(data.message).fadeIn();
                 $.cookies.set('auth_token', data.token);
+                setup();
             }
         }, "json");
         return false;
@@ -110,6 +122,20 @@ $(document).ready(function() {
     }
 });
 
+function logout_user(auth_token) {
+    $.post('logout', {auth_token:auth_token}, function(data) {
+        if (data) {
+            $('#user_confirm').html('Logged out successfully');
+        }
+        else {
+            $('#user_confirm').html('There was a problem logging you out');
+        }
+
+    });
+    $.cookies.del('auth_token');
+    setup();
+}
+
 function update_recent_photos(){
     $("#photo_display_header").html('Recent Photos');
     $("#thumbs").empty().hide();
@@ -135,6 +161,17 @@ function setup(){
             ' ' + mow_status.last_nomtime.toLocaleDateString();
         
         $('#status_area').append(Mustache.to_html(status_template, mow_status));
+
+        if (mow_status.user_name) {
+            $('#user_name').html(mow_status.user_name);
+            $('#login_form').hide();
+            $('#user_info').show();
+        }
+        else {
+            $('#login_form').show();
+            $('#user_info').hide();
+        }
+
    });
 }
 
@@ -195,6 +232,7 @@ function show_photo (photo) {
 
 function auth_user (auth_token) {
     $.getJSON('login/auth/' + auth_token, function () {
+        $.cookies.set('auth_token', data.token);
         console.log('authorizing');
     });
 }

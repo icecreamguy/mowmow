@@ -78,12 +78,11 @@ def strphour(hour_string):
     return datetime.strptime(hour_string, '%H:%M').time()
 
 def get_status(auth_token):
-    print(auth_token)
     status = utils.storage()
     status.fed = False
     status.fed_today = False
     status.lock = True
-    status.authenticated = auth_user(auth_token)
+    status.user_name = auth_user(auth_token)
     # This variable will keep track of whether or not the next feeding time occurs
     # today, or tomorrow
     status.next_start_day = 'today'
@@ -110,34 +109,21 @@ def get_status(auth_token):
     if status.last_nomtime.date() == day_now:
         status.fed_today = True
 
-    print('schedule: time_now is ' + time_now.strftime('%H:%M:%S'))
-    print('schedule: last_nomtime was ' + str(status.last_nomtime))
-    print(status.last_nomtime).time()
-
     # Main loop here - figure out if we're in a feed cycle, if we are then has the 
     # cat already been fed? When does it get fed next?
     for cycle_name in nom_cycles.iterkeys():
         start = nom_cycles[cycle_name]['start']
         end = nom_cycles[cycle_name]['end']
-        print('schedule: checking if in ' +\
-                cycle_name + ' cycle, starts at ' +\
-                start + ' and ends at ' + end
-        )
         if time_now > strphour(start) and time_now < strphour(end):
             # it's after the cycle start and before the cycle end
-            print('in ' + cycle_name)
             status.cycle_name = cycle_name
             if status.last_nomtime.time() > strphour(start) and status.fed_today:
                 # The last feeding was today and the time was after this cycle start
                 # time
-                print('schedule: already fed')
                 status.fed = True
             else:
                 # Cat hasn't been fed today, or was fed at an earlier cycle
-                print('schedule: not fed')
                 status.lock = False
-        else:
-            print('schedule: not in ' + cycle_name)
 
         # Already in the loop, why not build this list of remaining nom_times here?
         if strphour(start) > time_now:
@@ -182,7 +168,6 @@ def feed_cycle(data, date_strings):
             return json.dumps({'result': 'locked'})
 
         img_folder = make_imgfolder_string(img_root, date_strings)
-        print(img_folder)
         img_folder_abs = os.path.join(dir_base, img_folder)
 
         if not os.path.exists(img_folder_abs):
@@ -194,7 +179,6 @@ def feed_cycle(data, date_strings):
                 cycle_name=status.cycle_name)
 
         #Feed the baileycat
-        print('Activating feeder...')
         activate_feeder()
 
         # Fire up the camera!
@@ -291,12 +275,40 @@ def generate_user_token (user_id):
 
 def auth_user(token):
     db = config.db
-    auth = db.select('user_tokens', dict(token = token),
-        where = 'token = $token'
+    auth = db.query(
+        'SELECT name FROM mowmow.users,user_tokens '
+        'WHERE mowmow.users.id = user_tokens.user_id '
+        'AND token = $token',
+        vars = {'token': token}
     )
     
-    if not auth[0]:
+    if len(auth) == 0:
         #This token is not valid
         return False
     
-    return auth[0].id
+    return auth[0].name
+
+def logout_user(token):
+    db = config.db
+    rows_deleted = db.delete('user_tokens',
+        where = 'token = $token',
+        vars = {'token':token}
+    )
+
+    if rows_deleted < 1:
+        return False
+    else:
+        return True
+
+def login_account(account_data):
+    db = config.db
+    user_account = db.select('users',
+        where = 'users.email = $email AND users.pass_hash = $pass_hash',
+        vars = {'email': account_data.email_field,
+            'pass_hash': account_data.pass_field}
+    )
+    if not len(user_account):
+        return False;
+    else:
+        new_token = generate_user_token(user_account[0].id)
+        return new_token
