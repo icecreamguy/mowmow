@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users(
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    5d INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(70) NOT NULL,
     email VARCHAR(70) NOT NULL,
     pass_hash VARCHAR(100) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE user_tokens(
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-INSERT INTO users (name,email,pass,privilege) VALUES (
+INSERT INTO users (name,email,pass_hash,privilege) VALUES (
     "Unknown",
     "unknown",
     "none",
