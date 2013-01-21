@@ -90,6 +90,7 @@ class photo:
 class status:
     def GET(self):
         auth_token = web.cookies().get('auth_token')
+        web.header('cache-control', 'max-age=0')
         return json.dumps(mow_utils.get_status(auth_token),
                 cls=mow_utils.webpy_db_encoder)
 
