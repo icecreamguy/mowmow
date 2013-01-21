@@ -49,10 +49,11 @@ class nomnom:
     def POST(self):
         data = web.input()
 
+        auth_token = web.cookies().get('auth_token')
         # There are timestamp data associated with this specific image set. I 
         # plan to elimitate this in the future
         date_strings = mow_utils.date_strings()
-        response = mow_utils.feed_cycle(data, date_strings)
+        response = mow_utils.feed_cycle(data, date_strings, auth_token)
         return response
 
 # Any requests for the location of photos come here. So far it can return photos by
@@ -63,17 +64,25 @@ class photo:
         request = mow_utils.obj_from_photo_path(req_path)
         # TODO: validate the request['recent'] string
         if 'recent' in request:
-            response = db.query('SELECT * FROM photo,nomnoms WHERE photo.nomnom_id '
-                                '= nomnoms.id ORDER BY nomnoms.time_stamp DESC '
+            response = db.query('SELECT cycle_name,nomnoms.time_stamp,file_name,'
+                                'file_path,users.name '
+                                'FROM photo,nomnoms,users '
+                                'WHERE photo.nomnom_id = nomnoms.id '
+                                'AND nomnoms.user_id = users.id '
+                                'ORDER BY nomnoms.time_stamp DESC '
                                 'LIMIT ' + request['recent'])
             # Copy the db results out so that they can be postprocessed properly by
             # the JSONEncoder class
             response_list = list(response)
             return json.dumps(response_list, cls=mow_utils.webpy_db_encoder)
         elif 'date' in request:
-            response = db.query('SELECT * FROM photo,nomnoms WHERE photo.nomnom_id '
-                                ' = nomnoms.id AND DATE(time_stamp) LIKE $date '
-                                'ORDER BY time_stamp DESC', vars=request)
+            response = db.query('SELECT cycle_name,nomnoms.time_stamp,file_name,'
+                                'file_path,users.name '
+                                'FROM photo,nomnoms,users '
+                                'WHERE photo.nomnom_id = nomnoms.id '
+                                'AND nomnoms.user_id = users.id '
+                                'AND DATE(nomnoms.time_stamp) LIKE $date '
+                                'ORDER BY nomnoms.time_stamp DESC', vars=request)
             response_list = list(response)
             return json.dumps(response_list, cls=mow_utils.webpy_db_encoder)
         return
@@ -81,6 +90,7 @@ class photo:
 class status:
     def GET(self):
         auth_token = web.cookies().get('auth_token')
+        print('GET for status with token %s' % auth_token)
         return json.dumps(mow_utils.get_status(auth_token),
                 cls=mow_utils.webpy_db_encoder)
 

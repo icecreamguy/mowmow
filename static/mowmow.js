@@ -52,6 +52,11 @@ $(document).ready(function() {
                     been fed, or it isn\'t time to feed her yet.');
                 $('#feedresult_modal').modal('show');
             }
+            else if (result.result == 'unauthorized') {
+                $('#feedresult_text').html('Please log in or create an account \
+                    first');
+                $('#feedresult_modal').modal('show');
+            }
             else{
                 $('#feedresult_text').html('Bailey fed! Check the photos to make\
                     sure she\'s still adorable. Which she is. Duh.');
@@ -71,7 +76,7 @@ $(document).ready(function() {
         $.post('login/existing', $(this).serialize(), function (token) {
             console.log(token);
             if (token) {
-                auth_user(token);
+                $.cookies.set('auth_token', token);
                 setup();
             }
         });
@@ -151,6 +156,7 @@ function update_recent_photos(){
 
 function setup(){
     $.getJSON('status', function(mow_status){
+        console.log('setting up');
         var status_template = $('#status_template').html();
 
         if (mow_status.lock){ mow_status.lock = 'No'; }
@@ -199,6 +205,7 @@ function parse_photos(){
         if (!photo.cycle_name){
             photo.cycle_name = 'unknown';
         }
+        console.log(photo);
         $('#thumbs').append(Mustache.to_html(photo_template, photo));
         // Fade in the area so it looks cool
         $("#thumbs").fadeIn('slow');
@@ -214,11 +221,13 @@ function parse_photos(){
 }
 
 function print_r(objects){
+    var string = ''
     for (var object in objects){
         if (objects.hasOwnProperty(object)){
-            alert(object + '\n' + objects[object]);
+            string += object + '\n' + objects[object];
         }
     }
+    return string;
 }
 
 function show_photo (photo) {
@@ -232,7 +241,5 @@ function show_photo (photo) {
 
 function auth_user (auth_token) {
     $.getJSON('login/auth/' + auth_token, function () {
-        $.cookies.set('auth_token', data.token);
-        console.log('authorizing');
     });
 }

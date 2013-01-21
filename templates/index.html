@@ -29,7 +29,7 @@
                         <form id="login_form" >
                             <input name="email_field" type="text" 
                                 placeholder="email address">
-                            <input name="pass_field" type="text" 
+                            <input name="pass_field" type="password" 
                                 placeholder="password">
                             <button name="submit" class="btn">
                                 Login
@@ -161,7 +161,8 @@
                 <div class="thumbnail">
                     <img src="{{file_path}}/{{file_name}}" class="photo"
                         data-photo_id="{{index}}">
-                        {{time_stamp}} <br> {{cycle_name}} cycle
+                        {{time_stamp}} <br> {{cycle_name}} cycle <br>
+                        fed by {{name}}
                 </div>
             </li>
         </script>

@@ -82,7 +82,11 @@ def get_status(auth_token):
     status.fed = False
     status.fed_today = False
     status.lock = True
-    status.user_name = auth_user(auth_token)
+    if (auth_token):
+        status.user_name, status.user_id = auth_user(auth_token)
+    else:
+        status.user_name = None
+    print('name is %s' % status.user_name)
     # This variable will keep track of whether or not the next feeding time occurs
     # today, or tomorrow
     status.next_start_day = 'today'
@@ -156,12 +160,16 @@ def get_status(auth_token):
         datetime = datetime.replace(tzinfo=local_tz)
         return datetime.astimezone(utc_tz)
 
-def feed_cycle(data, date_strings):
+def feed_cycle(data, date_strings, auth_token):
     if 'feed' in data:
         db = config.db
         img_root = config.img_root
         dir_base = config.dir_base
-        status = get_status()
+        status = get_status(auth_token)
+        print(status)
+        if not status.user_name:
+            return json.dumps({'result': 'unauthorized'})
+        print('feeding for %s' % status.user_id)
         nomnom_result = {}
 
         if status['lock']:
@@ -176,10 +184,11 @@ def feed_cycle(data, date_strings):
         # Make an entry in the nomnoms table for this feeding. The images will
         # be associated with this record
         nomnom_id = db.insert('nomnoms',
-                cycle_name=status.cycle_name)
+                cycle_name=status.cycle_name,
+                user_id = status.user_id)
 
         #Feed the baileycat
-        activate_feeder()
+        #activate_feeder()
 
         # Fire up the camera!
         camera = camowra.init_camera()
@@ -276,17 +285,19 @@ def generate_user_token (user_id):
 def auth_user(token):
     db = config.db
     auth = db.query(
-        'SELECT name FROM mowmow.users,user_tokens '
-        'WHERE mowmow.users.id = user_tokens.user_id '
+        'SELECT name,users.id FROM users,user_tokens '
+        'WHERE users.id = user_tokens.user_id '
         'AND token = $token',
-        vars = {'token': token}
+        vars = {'token': token.strip('"')}
     )
     
-    if len(auth) == 0:
+    if not bool(auth):
         #This token is not valid
+        print('no account found during auth')
         return False
-    
-    return auth[0].name
+    else:
+        user_details = auth[0]
+        return user_details['name'], user_details['id']
 
 def logout_user(token):
     db = config.db
@@ -310,5 +321,8 @@ def login_account(account_data):
     if not len(user_account):
         return False;
     else:
-        new_token = generate_user_token(user_account[0].id)
+        account = user_account[0]
+        print('found account for %s' % account['name'])
+        new_token = generate_user_token(account['id'])
+        print(new_token)
         return new_token
