@@ -1,10 +1,7 @@
 USE mowmow;
 
-DROP TABLE IF EXISTS tokens;
-DROP TABLE IF EXISTS users;
-
 CREATE TABLE users(
-    5d INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(70) NOT NULL,
     email VARCHAR(70) NOT NULL,
     pass_hash VARCHAR(100) NOT NULL,
@@ -20,10 +17,11 @@ CREATE TABLE user_tokens(
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-INSERT INTO users (name,email,pass_hash,privilege) VALUES (
+INSERT INTO users (name,email,pass_hash,salt,privilege) VALUES (
     "Unknown",
     "unknown",
     "none",
+    "ASDFASDFASFASDFASDFSADFASDFSADFASDF",
     0
 );
 

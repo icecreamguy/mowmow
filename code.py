@@ -42,8 +42,8 @@ class login:
 
 class logout:
     def POST(self):
-        data = web.input()
-        return mow_utils.logout_user(data.auth_token)
+        auth_token = web.cookies().get('auth_token')
+        return mow_utils.logout_user(auth_token)
 
 class nomnom:
     def POST(self):
@@ -90,7 +90,6 @@ class photo:
 class status:
     def GET(self):
         auth_token = web.cookies().get('auth_token')
-        print('GET for status with token %s' % auth_token)
         return json.dumps(mow_utils.get_status(auth_token),
                 cls=mow_utils.webpy_db_encoder)
 

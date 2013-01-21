@@ -85,8 +85,7 @@ def get_status(auth_token):
     if (auth_token):
         status.user_name, status.user_id = auth_user(auth_token)
     else:
-        status.user_name = None
-    print('name is %s' % status.user_name)
+        status.user_name = status.user_id = None
     # This variable will keep track of whether or not the next feeding time occurs
     # today, or tomorrow
     status.next_start_day = 'today'
@@ -148,7 +147,6 @@ def get_status(auth_token):
     status.next_nom_start = nom_cycles[next_cycle]['start']
     status.next_nom_end = nom_cycles[next_cycle]['end']
     status.tz = time.tzname[0]
-    print(status)
     return status
 
 # Saw this on StackOverflow at
@@ -166,10 +164,8 @@ def feed_cycle(data, date_strings, auth_token):
         img_root = config.img_root
         dir_base = config.dir_base
         status = get_status(auth_token)
-        print(status)
         if not status.user_name:
             return json.dumps({'result': 'unauthorized'})
-        print('feeding for %s' % status.user_id)
         nomnom_result = {}
 
         if status['lock']:
@@ -257,10 +253,17 @@ def create_account(account_data):
         return account_creation_state
     else:
         # Otherwise, create the account
+
+        from passlib.hash import bcrypt
+        # 15 rounds seems to be the max that is reasonable to ask a user to wait for
+        # password validation or hash creation. Takes about 2.40 seconds on my
+        # system
+        pass_hash = bcrypt.encrypt(account_data.pass_field, rounds=15)
+
         user_id = db.insert('users',
             name = account_data.name_field,
             email = account_data.email_field,
-            pass_hash = account_data.pass_field,
+            pass_hash = pass_hash,
             privilege = 0
         )
         account_creation_state['message'] = 'Account created!'
@@ -293,8 +296,7 @@ def auth_user(token):
     
     if not bool(auth):
         #This token is not valid
-        print('no account found during auth')
-        return False
+        return None, None
     else:
         user_details = auth[0]
         return user_details['name'], user_details['id']
@@ -303,7 +305,7 @@ def logout_user(token):
     db = config.db
     rows_deleted = db.delete('user_tokens',
         where = 'token = $token',
-        vars = {'token':token}
+        vars = {'token':token.strip('"')}
     )
 
     if rows_deleted < 1:
@@ -314,15 +316,17 @@ def logout_user(token):
 def login_account(account_data):
     db = config.db
     user_account = db.select('users',
-        where = 'users.email = $email AND users.pass_hash = $pass_hash',
-        vars = {'email': account_data.email_field,
-            'pass_hash': account_data.pass_field}
+        what = 'id,users.pass_hash',
+        where = 'users.email = $email',
+        vars = {'email': account_data.email_field}
     )
     if not len(user_account):
         return False;
     else:
         account = user_account[0]
-        print('found account for %s' % account['name'])
-        new_token = generate_user_token(account['id'])
-        print(new_token)
-        return new_token
+        from passlib.hash import bcrypt
+        if bcrypt.verify(account_data.pass_field, account.pass_hash):
+            new_token = generate_user_token(account['id'])
+            return new_token
+        else:
+            return False;

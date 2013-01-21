@@ -74,9 +74,14 @@ $(document).ready(function() {
     //bind events to forms
     $('#login_form').submit(function () {
         $.post('login/existing', $(this).serialize(), function (token) {
-            console.log(token);
-            if (token) {
+            if (token != 'false') {
                 $.cookies.set('auth_token', token);
+                $('#user_confirm').html('Logged in!').show();
+                $('#user_err').hide();
+                setup();
+            }
+            else {
+                $('#user_err').html('Incorrect email or password').show();
                 setup();
             }
         });
@@ -128,12 +133,13 @@ $(document).ready(function() {
 });
 
 function logout_user(auth_token) {
+    console.log('loging out');
     $.post('logout', {auth_token:auth_token}, function(data) {
         if (data) {
-            $('#user_confirm').html('Logged out successfully');
+            $('#user_confirm').html('Logged out successfully').show();
         }
         else {
-            $('#user_confirm').html('There was a problem logging you out');
+            $('#user_confirm').html('There was a problem logging you out').show();
         }
 
     });
@@ -156,7 +162,6 @@ function update_recent_photos(){
 
 function setup(){
     $.getJSON('status', function(mow_status){
-        console.log('setting up');
         var status_template = $('#status_template').html();
 
         if (mow_status.lock){ mow_status.lock = 'No'; }
@@ -205,7 +210,6 @@ function parse_photos(){
         if (!photo.cycle_name){
             photo.cycle_name = 'unknown';
         }
-        console.log(photo);
         $('#thumbs').append(Mustache.to_html(photo_template, photo));
         // Fade in the area so it looks cool
         $("#thumbs").fadeIn('slow');
