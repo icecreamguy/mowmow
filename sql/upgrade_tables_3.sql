@@ -17,11 +17,10 @@ CREATE TABLE user_tokens(
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-INSERT INTO users (name,email,pass_hash,salt,privilege) VALUES (
+INSERT INTO users (name,email,pass_hash,privilege) VALUES (
     "Unknown",
     "unknown",
     "none",
-    "ASDFASDFASFASDFASDFSADFASDFSADFASDF",
     0
 );
 

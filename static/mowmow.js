@@ -74,6 +74,7 @@ $(document).ready(function() {
     //bind events to forms
     $('#login_form').submit(function () {
         $.post('login/existing', $(this).serialize(), function (token) {
+            $('#loading_image_2').show();
             if (token != 'false') {
                 $.cookies.set('auth_token', token);
                 $('#user_confirm').html('Logged in!').show();
@@ -133,7 +134,6 @@ $(document).ready(function() {
 });
 
 function logout_user(auth_token) {
-    console.log('loging out');
     $.post('logout', {auth_token:auth_token}, function(data) {
         if (data) {
             $('#user_confirm').html('Logged out successfully').show();
@@ -161,7 +161,6 @@ function update_recent_photos(){
 }
 
 function setup(){
-    console.log('setting up');
     $.getJSON('status', function(mow_status){
         var status_template = $('#status_template').html();
 
@@ -174,10 +173,7 @@ function setup(){
         
         $('#status_area').append(Mustache.to_html(status_template, mow_status));
 
-        console.log(print_r(mow_status));
-        console.log(mow_status.user_name);
         if (mow_status.user_name) {
-            console.log(mow_status.user_name);
             $('#user_name').html(mow_status.user_name);
             $('#login_form').hide();
             $('#user_info').show();
@@ -190,6 +186,9 @@ function setup(){
         // fill placeholders in IE with this sweet plugin from
         // https://github.com/jamesallardice/Placeholders.js
         Placeholders.init();
+
+        // Hide the loading image in case anything was loading
+        $("#loading_image_2").hide();
 
    });
 }
