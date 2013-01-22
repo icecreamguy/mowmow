@@ -172,7 +172,7 @@ function setup(){
         mow_status.last_nomtime = mow_status.last_nomtime.toLocaleTimeString() +
             ' ' + mow_status.last_nomtime.toLocaleDateString();
         
-        $('#status_area').append(Mustache.to_html(status_template, mow_status));
+        $('#status_area').html(Mustache.to_html(status_template, mow_status));
 
         if (mow_status.user_name) {
             $('#user_name').html(mow_status.user_name);
