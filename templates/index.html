@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
         <title> Mowmowmowmowmow </title>
         <!-- Stylesheets -->
         <link rel="stylesheet"
@@ -86,6 +88,13 @@
                     <ul class="thumbnails" id="thumbs"></ul>
                 </div><!-- !Main Column -->
             </div><!-- !Main row -->
+            <div class="row-fluid" id="footer">
+                <span class="span2"></span>
+                <div class="span8" id="license">
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Baileyface</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://codeplasma.com" property="cc:attributionName" rel="cc:attributionURL">Julius Schlosburg</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
+                </div>
+                <span class="span2"></span>
+            </div>
         </div> <!-- !Bootstrap container -->
         <div id="feedresult_modal" class="modal hidden fade" tabindex="-1"
             role="dialog" aria-labelledby="feedresult_label" aria-hidden="true">
@@ -114,7 +123,7 @@
                 <h3 id="photo_label"></h3>
             </div>
             <div class="modal-body">
-                    <img id="modal_image">
+                    <img id="modal_image" src="" alt="Cat nomnoming">
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">
@@ -157,6 +166,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <div id="tos">
+                    <p>Terms of service: This website if for friends and family. Feel free to use an alias instead of your real name if you would like. I'm not going to do anything with your email address, I just think it's easier to remember an email address as opposed to a username, plus no two people will choose the same username if your username is your email address. In the future maybe I'll put in a password reset function which will use it, but as of now it's really just your username. This website doesn't use HTTPS yet, so if you have some reason to believe that someone is intercepting your web traffic, well, look into that and also don't use a password that you would want them to see.</p>
+                </div>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">
                     <i class="icon-remove"></i> Close
                 </button>

@@ -44,3 +44,9 @@ h1{
 .label{
     margin: 5px;
 }
+#license{
+    color: #8AB8E6;
+}
+#tos{
+    text-align: center;
+}
