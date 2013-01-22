@@ -73,8 +73,8 @@ $(document).ready(function() {
         
     //bind events to forms
     $('#login_form').submit(function () {
+        $('#loading_image_2').show();
         $.post('login/existing', $(this).serialize(), function (token) {
-            $('#loading_image_2').show();
             if (token != 'false') {
                 $.cookies.set('auth_token', token);
                 $('#user_confirm').html('Logged in!').show();
@@ -90,6 +90,7 @@ $(document).ready(function() {
     });
 
     $('#new_account_form').submit(function () {
+        $('#loading_image_3').show();
         $.post('login/new', $(this).serialize(), function (data) {
             if (data.problems){
                 $('#user_confirm').hide();
@@ -189,6 +190,7 @@ function setup(){
 
         // Hide the loading image in case anything was loading
         $("#loading_image_2").hide();
+        $("#loading_image_3").hide();
 
    });
 }
