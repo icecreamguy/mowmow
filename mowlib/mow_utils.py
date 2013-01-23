@@ -158,12 +158,18 @@ def get_status(auth_token):
         datetime = datetime.replace(tzinfo=local_tz)
         return datetime.astimezone(utc_tz)
 
-def feed_cycle(data, date_strings, auth_token):
+def feed_cycle(data, date_strings, auth_token, external=False):
     if 'feed' in data:
         db = config.db
         img_root = config.img_root
         dir_base = config.dir_base
         status = get_status(auth_token)
+        if external:
+            # This is an externally triggered cycle, use the system account and
+            # unlock the feeder
+            status.user_id = 1
+            status.user_name = 'System'
+            status.lock = False
         if not status.user_name:
             return json.dumps({'result': 'unauthorized'})
         nomnom_result = {}

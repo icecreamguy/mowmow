@@ -14,4 +14,4 @@ if status['fed']:
 else:
     print('Feeding')
     data = utils.storage(feed = 1)
-    mow_utils.feed_cycle(data, mow_utils.date_strings(), None)
+    print(mow_utils.feed_cycle(data, mow_utils.date_strings(), None, external=True))
