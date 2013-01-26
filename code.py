@@ -3,7 +3,6 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'mowlib'))
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 import web
-import camowra
 import mow_utils
 import json
 import datetime
@@ -34,6 +33,8 @@ class index:
 class login:
     def POST(self, req_path):
         data = web.input()
+        # Never cache login replies
+        web.header('cache-control', 'max-age=0')
         if req_path == 'new':
             # Create new account
             return json.dumps(mow_utils.create_account(data))
