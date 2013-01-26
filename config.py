@@ -1,8 +1,11 @@
 from web import database, utils
 from os import path
-from cv2.cv import CV_IMWRITE_PNG_COMPRESSION
 
-pass_salt = "CHANGE ME!"
+# Something is seriously screwed up with this import here. Just going to pull out
+# the information I need manually and skip it
+# from cv2.cv import CV_IMWRITE_PNG_COMPRESSION
+CV_IMWRITE_PNG_COMPRESSION = 16
+
 db = database(dbn='mysql', user='mowmow', pw='CHANGE ME',
         db='mowmow')
 img_root = 'static/img/mrow'
