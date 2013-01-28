@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Mowmowmowmowmow </title>
+        <!-- Stylesheets -->
+        <link rel="stylesheet"
+            href="css/jquery-ui-1.9.1.custom.min.css">
+        <link rel="stylesheet" 
+            href="css/bootstrap.min.css" media="screen">
+        <link rel="stylesheet" 
+            href="css/bootstrap-responsive.css" media="screen">
+        <link rel="stylesheet" href="css/mowmow.css">
+    </head>
+    <body>
+        <div class='containter-fluid'>
+            <!-- Header Row -->
+            <div class="row-fluid">
+                <div class="page-header">
+                    <h1>Baileyface<small> Feed the Bailey!</small></h1>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <!-- Navigation column -->
+                <div class="span3">
+                    <div class="well">
+                        <div id="user_info" class="hidden">
+                            Logged in as <span id="user_name"></span>
+                            <br>
+                            <button id="logout" class="btn">Log Out</button>
+                        </div>
+                        <!-- Login Form -->
+                        <form id="login_form" >
+                            <input name="email_field" type="text" 
+                                placeholder="email address">
+                            <input name="pass_field" type="password" 
+                                placeholder="password">
+                            <br>
+                            <button name="submit" class="btn">
+                                Login
+                            </button>
+                            <button id="new_account" class="btn">
+                                New Account
+                            </button>
+                        </form>
+                        <div id="loading_image_2">
+                            <img src="img/loading.gif" alt="loading...">
+                        </div>
+                        <span id="user_confirm" class="label label-success hidden">
+                        </span>
+                        <span id="user_err" class="label label-important hidden">
+                        </span>
+                    </div>
+                    <div class="well sidebar-nav">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">
+                                What would you like to do mow?
+                            <li class="nav-item">
+                            <button id="take_photo_button" class="btn btn-block">
+                                <i class='icon-heart'></i> Feed the Bailey!
+                            </button>
+                            </li>
+                            <li class="nav-item">
+                            <button id="show_recent_photos"
+                                class="btn btn-block">
+                                    <i class='icon-camera'></i> Recent Photos
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="show_date_picker" class="btn btn-block">
+                                    <i class='icon-calendar'></i> Photos by Date
+                                </button>
+                                <br>
+                                <div id="date_picker_container">
+                                    <span id="date_picker"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div> 
+                    <div class="well" id="status_area"></div>
+                </div><!-- !Sidebar Navigation -->
+
+                <!-- Main column for photo display -->
+                <div class="span8" id="main_display">
+                    <div id="loading_img">
+                        Feeding the cat!
+                        <img src="img/nomnom.gif" alt="loading...">
+                        omnomnomnomnom...
+                    </div>
+                    <h2 id="photo_display_header"></h2>
+                    <ul class="thumbnails" id="thumbs"></ul>
+                </div><!-- !Main Column -->
+            </div><!-- !Main row -->
+            <div class="row-fluid" id="footer">
+                <span class="span2"></span>
+                <div class="span8" id="license">
+                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Baileyface</span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://codeplasma.com" property="cc:attributionName" rel="cc:attributionURL">Julius Schlosburg</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a><br><a href="https://github.com/icecreamguy/mowmow">Source Code</a>.
+                </div>
+                <span class="span2"></span>
+            </div>
+        </div> <!-- !Bootstrap container -->
+        <div id="feedresult_modal" class="modal hidden fade" tabindex="-1"
+            role="dialog" aria-labelledby="feedresult_label" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="icon-remove"></i> 
+                </button>
+                <h3 id="feedresult_label">Nom Results</h3>
+            </div>
+            <div class="modal-body">
+                <p><span id="feedresult_text"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    <i class="icon-remove"></i> Close
+                </button>
+            </div>
+        </div>
+
+        <div id="photo_modal" class="modal hidden fade" tabindex="-1" role="dialog"
+            aria-labelledby="photo_label" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="icon-remove"></i> 
+                </button>
+                <h3 id="photo_label"></h3>
+            </div>
+            <div class="modal-body">
+                    <img id="modal_image" src="" alt="Cat nomnoming">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    <i class="icon-remove"></i> Close
+                </button>
+            </div>
+        </div>
+
+        <div id="new_account_modal" class="modal hidden fade" tabindex="-1"
+            role="dialog" aria-labelledby="new_account_label" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="icon-remove"></i> 
+                </button>
+                <h3 id="new_account_label">Create a New Account</h3>
+            </div>
+            <div class="modal-body">
+                <div id="new_account_alert" class="alert fade in hidden">
+                    <h5>Please correct the following items:</h5>
+                    <span id="new_account_alert_text"></span>
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i> 
+                    </button>
+                </div>
+                <form id="new_account_form">
+                    <input name="name_field" type="text" 
+                            placeholder="name">
+                    <input name="email_field" type="text" 
+                            placeholder="email address">
+                    <input name="pass_field" type="password" placeholder="password">
+                    <input name="pass_confirm_field" type="password" 
+                        placeholder="confirm password">
+                    <button name="submit" aria-hidden="true"
+                        class="btn">
+                        <i class="icon-check"></i> Create Account
+                    </button>
+                </form>
+                <div id="loading_image_3">
+                    <img src="img/loading.gif" alt="loading...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="tos">
+                    <p>Terms of service: This website if for friends and family. Feel free to use an alias instead of your real name if you would like. I'm not going to do anything with your email address, I just think it's easier to remember an email address as opposed to a username, plus no two people will choose the same username if your username is your email address. In the future maybe I'll put in a password reset function which will use it, but as of now it's really just your username. This website doesn't use HTTPS yet, so if you have some reason to believe that someone is intercepting your web traffic, well, look into that and also don't use a password that you would want them to see.</p>
+                </div>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    <i class="icon-remove"></i> Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Templates -->
+        <script id="photo_template" type="text/template">
+            <li class="span3">
+                <div class="thumbnail">
+                    <img src="{{file_path}}/{{file_name}}" class="photo"
+                        data-photo_id="{{index}}">
+                        {{time_stamp}} <br> {{cycle_name}} cycle <br>
+                        fed by {{name}}
+                </div>
+            </li>
+        </script>
+        
+        <script id="status_template" type="text/template">
+            <dl>
+                <dt>Bailey's last nomtime was at</dt>
+                <dd>{{last_nomtime}} {{tz}}</dd><br>
+                <dt>The next scheduled feeding time is from</dt>
+                <dd>
+                    {{next_nom_start}} until
+                    {{next_nom_end}} {{tz}} 
+                    {{next_start_day}}
+                </dd>
+                <br>
+                <dt>Can you click the "Feed" button RIGHT NOW?</dt>
+                <dd>{{lock}}!</dd><br>
+            </dl>
+        </script>
+
+        <script id="new_account_alert_template" type="text/template">
+            <ul>
+                {{#message}}
+                    <li>{{.}}</li>
+                {{/message}}
+            </ul>
+        </script>
+
+        <!-- Saw this in the Bootstrap docs, supposedly makes the page load faster
+        when the js is loaded at the end of the page.-->
+        <script type="text/javascript" src="js/date.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <!-- Needed to load Bootstrap before jquery-ui or else the buttons didn't
+        look right -->
+        <script type="text/javascript"
+            src="js/jquery-ui-1.9.1.custom.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js">
+        </script>
+        <script type="text/javascript" src="js/jquery.cookies.min.js">
+        </script>
+        <script type="text/javascript" src="js/Placeholders.min.js"></script>
+        <script type="text/javascript" src="js/mustache.js"></script>
+        <script type="text/javascript" src="js/mowmow.js"></script>
+    </body>
+</html>
