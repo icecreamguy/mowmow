@@ -1,6 +1,6 @@
 body{
     /* From subtlepatterns.com, by Mohawk Studios */
-    background: url(/static/img/use_your_illusion.png) repeat 0 0;
+    background: url(/img/use_your_illusion.png) repeat 0 0;
 }
 .sidebar-nav {
     padding: 9px 0;
@@ -23,7 +23,7 @@ body{
 }
 .well{
     /* From subtlepatterns.com, by Luuk van Baars */
-    background: url(/static/img/shattered.png) repeat 0 0;
+    background: url(/img/shattered.png) repeat 0 0;
 }
 h2{
     color: #ced1d4;

@@ -20,7 +20,6 @@ urls = (
     '/status', 'status',
     '/login/?(new|existing)?', 'login',
     '/logout', 'logout',
-    '/openid', 'openid',
     '/(.*)', 'index',
 )
 

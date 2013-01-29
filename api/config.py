@@ -6,10 +6,10 @@ from os import path
 # from cv2.cv import CV_IMWRITE_PNG_COMPRESSION
 CV_IMWRITE_PNG_COMPRESSION = 16
 
-db = database(dbn='mysql', user='mowmow', pw='CHANGE ME',
+db = database(dbn='mysql', user='mowmow', pw='Iq2UKpvgwqKP83WmdrsQB',
         db='mowmow')
 img_root = 'static/img/mrow'
-dir_base = path.dirname(__file__)
+dir_base, api_path = path.split(path.dirname(__file__))
 
 camera_port = 0
 compression_settings = [int(CV_IMWRITE_PNG_COMPRESSION), 9]
