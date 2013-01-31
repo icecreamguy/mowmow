@@ -218,6 +218,7 @@ function parse_photos(){
     var photo_template = $('#photo_template').html();
     $.each(current_photos, function(index,photo){
         photo.index = index;
+        photo.thumb_file_name = photo.file_name.replace('.png','_thumb.png');
         if (!photo.cycle_name){
             photo.cycle_name = 'unknown';
         }

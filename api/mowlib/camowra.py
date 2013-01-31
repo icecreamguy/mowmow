@@ -52,9 +52,10 @@ def generate_image_set(image_count, img_directory, date_strings, sleep_time,
         print('writing image to file: %s' % file)
         cv2.imwrite(file, camera_capture, config.compression_settings)
 
-        # Shrink the image and compress the shit out of it, after taking a backup
-        os.system('cp %s %s' % (file, file.replace('.', '_large.')))
-        os.system('convert %s -quality 9 -resize 320x240 %s' % (file, file))
+        # Shrink the image and compress the shit out of it for a thumbnail. Original
+        # image is preserved, this new one has '_thumb' at the end
+        os.system('convert %s -quality 9 -resize 200x150 %s' % (file,
+            file.replace('.png','_thumb.png')))
 
         db.insert('photo',
                 file_name=filename,
