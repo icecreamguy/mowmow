@@ -99,12 +99,14 @@ $(document).ready(function() {
                 $('#new_account_alert_text').append(Mustache.to_html(alert_template,
                         data));
                 $('#new_account_alert').show();
+                $('#loading_image_3').hide();
             }
             else{
                 $('#new_account_alert').hide();
                 $('#new_account_modal').modal('hide');
                 $('#user_confirm').html(data.message).fadeIn();
                 $.cookies.set('auth_token', data.token);
+                $('#loading_image_3').hide();
                 setup();
             }
         }, "json");

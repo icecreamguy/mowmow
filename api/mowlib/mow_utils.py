@@ -226,10 +226,19 @@ def create_account(account_data):
         if not len(val):
             account_creation_state['message'].append('%s cannot be blank' % field)
 
+    # ONly allow letters, numbers, and spaces in the name field
+    username_regex = ("^[\w\s]{0,70}$")
+
+    # Check if it's a valid username
+    if not re.compile(username_regex).match(account_data.name_field):
+        account_creation_state['message'].append('Invalid username. Letters,'
+            'numbers, spaces only')
+
     # Email regex from regular-expressions.info/email.html
     email_regex = ("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*"
                    "@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-"
                    "z0-9])?")
+
     # Check if it's a valid email address
     if not re.compile(email_regex).match(account_data.email_field):
         account_creation_state['message'].append('Invalid email format')
