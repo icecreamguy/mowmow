@@ -147,6 +147,7 @@ def get_status(auth_token):
     status.next_nom_start = nom_cycles[next_cycle]['start']
     status.next_nom_end = nom_cycles[next_cycle]['end']
     status.tz = time.tzname[0]
+    status.lock = False;
     return status
 
 # Saw this on StackOverflow at
