@@ -95,7 +95,7 @@
             <div class="row-fluid" id="footer">
                 <span class="span2"></span>
                 <div class="span8" id="license">
-                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Baileyface</span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://codeplasma.com" property="cc:attributionName" rel="cc:attributionURL">Julius Schlosburg</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a><br><a href="https://github.com/icecreamguy/mowmow">Source Code</a>.
+                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Baileyface images</span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://codeplasma.com" property="cc:attributionName" rel="cc:attributionURL">Julius Schlosburg</a>are licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a><br><a href="https://github.com/icecreamguy/mowmow">Source Code</a>.
                 </div>
                 <span class="span2"></span>
             </div>
@@ -160,18 +160,20 @@
                     <input name="pass_field" type="password" placeholder="password">
                     <input name="pass_confirm_field" type="password" 
                         placeholder="confirm password">
+                    <div id="tos">
+                        <p>Terms of service: This website if for friends and family. Feel free to use an alias instead of your real name if you would like. I'm not going to do anything with your email address, I just think it's easier to remember an email address as opposed to a username, plus no two people will choose the same username if your username is your email address. In the future maybe I'll put in a password reset function which will use it, but as of now it's really just your username. Furthermore, as far as your security goes, your pasword (transmitted over HTTPS) will not be stored on this system, only a cryptographic hash of it will be kept. This means that neither I nor anyone else could figure out your password before the sun burns out, even with full access to the password database. For more details see the "Source Code" link at the bottom of this page</p>
+                        <p>I reserve the right to change these terms at any time, but under no circumstance will those changes ever include divulging your email address to any other party</p>
+                        <p>By creating an account, you agree to be bound by these pretty relaxed terms :-)</p>
+                    </div>
                     <button name="submit" aria-hidden="true"
                         class="btn">
                         <i class="icon-check"></i> Create Account
                     </button>
                 </form>
-                <div id="loading_image_3">
-                    <img src="img/loading.gif" alt="loading...">
-                </div>
             </div>
             <div class="modal-footer">
-                <div id="tos">
-                    <p>Terms of service: This website if for friends and family. Feel free to use an alias instead of your real name if you would like. I'm not going to do anything with your email address, I just think it's easier to remember an email address as opposed to a username, plus no two people will choose the same username if your username is your email address. In the future maybe I'll put in a password reset function which will use it, but as of now it's really just your username. This website doesn't use HTTPS yet, so if you have some reason to believe that someone is intercepting your web traffic, well, look into that and also don't use a password that you would want them to see.</p>
+                <div id="loading_image_3" class="pull-left">
+                    <img src="img/loading.gif" alt="loading...">
                 </div>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">
                     <i class="icon-remove"></i> Close
