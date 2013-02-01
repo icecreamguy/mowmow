@@ -41,7 +41,7 @@ $(document).ready(function() {
         // key of "capture" it will take a photo. The value doesn't actually do
         // anything
         loading_img.show();
-        $.post('nomnom', { feed: 1 }, function(data){
+        $.post('api/nomnom', { feed: 1 }, function(data){
             // After we get a (hopfully successful) response back, load/reload the
             // recent photos area.
             // TODO 
@@ -74,7 +74,7 @@ $(document).ready(function() {
     //bind events to forms
     $('#login_form').submit(function () {
         $('#loading_image_2').show();
-        $.post('login/existing', $(this).serialize(), function (token) {
+        $.post('api/login/existing', $(this).serialize(), function (token) {
             if (token != 'false') {
                 $.cookies.set('auth_token', token);
                 $('#user_confirm').html('Logged in!').show();
@@ -91,7 +91,7 @@ $(document).ready(function() {
 
     $('#new_account_form').submit(function () {
         $('#loading_image_3').show();
-        $.post('login/new', $(this).serialize(), function (data) {
+        $.post('api/login/new', $(this).serialize(), function (data) {
             if (data.problems){
                 $('#user_confirm').hide();
                 var alert_template = $('#new_account_alert_template').html();
@@ -137,7 +137,7 @@ $(document).ready(function() {
 });
 
 function logout_user(auth_token) {
-    $.post('logout', {auth_token:auth_token}, function(data) {
+    $.post('api/logout', {auth_token:auth_token}, function(data) {
         if (data) {
             $('#user_confirm').html('Logged out successfully').show();
         }
@@ -155,7 +155,7 @@ function update_recent_photos(){
     $("#thumbs").empty().hide();
     // Grab the 8 most recent photos. On success add them into the photo
     // display area
-    $.getJSON('photo/recent/8', function(recent_photos){
+    $.getJSON('api/photo/recent/8', function(recent_photos){
         current_photos = recent_photos;
         parse_photos();
     });
@@ -164,7 +164,7 @@ function update_recent_photos(){
 }
 
 function setup(){
-    $.getJSON('status', function(mow_status){
+    $.getJSON('api/status', function(mow_status){
         var status_template = $('#status_template').html();
 
         if (mow_status.lock){ mow_status.lock = 'No'; }
@@ -202,7 +202,7 @@ function show_photos_by_date(date){
     init_photo_display('Photos From ' + date);
     // Grab a list of the photos from the specified date. On success add them
     // into the photo display area
-    $.getJSON('photo/date/' + date, function(photos_from_date){
+    $.getJSON('api/photo/date/' + date, function(photos_from_date){
         current_photos = photos_from_date
         parse_photos();
     });
@@ -256,6 +256,6 @@ function show_photo (photo) {
 }
 
 function auth_user (auth_token) {
-    $.getJSON('login/auth/' + auth_token, function () {
+    $.getJSON('api/login/auth/' + auth_token, function () {
     });
 }
