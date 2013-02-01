@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'mowlib'))
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+sys.path.append(os.path.dirname(__file__))
 import web
 import mow_utils
 import json
@@ -16,7 +16,15 @@ urls = (
     '/status', 'status',
     '/login/?(new|existing)?', 'login',
     '/logout', 'logout',
+    '/stats/(top_feeders)', 'stats',
 )
+
+# Doing this correctly finally and keeping the model logic organized. This goes
+# straight to the stats model file's get method, passing the req_path in
+class stats:
+    def GET(self, req_path):
+        from models import stats_model
+        return stats_model.get(req_path)
 
 class login:
     def POST(self, req_path):
