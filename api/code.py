@@ -10,24 +10,13 @@ import config
 db = config.db
 img_root = config.img_root
 
-# Not actually passing anything to the template renderer yet, not sure if I ever
-# will
-render = web.template.render(os.path.join(os.path.dirname(__file__),'templates/'))
-
 urls = (
     '/nomnom', 'nomnom',
     mow_utils.date_regex_string, 'photo',
     '/status', 'status',
     '/login/?(new|existing)?', 'login',
     '/logout', 'logout',
-    '/(.*)', 'index',
 )
-
-class index:
-    def GET(self, req_path):
-        # Don't actually need to do anything here yet other than to return the
-        # rendered template
-        return render.index()
 
 class login:
     def POST(self, req_path):

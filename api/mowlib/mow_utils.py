@@ -190,7 +190,7 @@ def feed_cycle(data, date_strings, auth_token, external=False):
                 user_id = status.user_id)
 
         #Feed the baileycat
-        #activate_feeder()
+        activate_feeder()
 
         # Fire up the camera!
         camera = camowra.init_camera()
