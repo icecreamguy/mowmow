@@ -6,7 +6,7 @@ body{
     padding: 9px 0;
 }
 .nav-item{
-    padding: 5px;
+    padding: 2px;
 }
 .button{
     width: 80%;
@@ -21,7 +21,7 @@ body{
 #loading_img img{
     width: 50px;
 }
-.well{
+.well-small{
     /* From subtlepatterns.com, by Luuk van Baars */
     background: url(/static/img/shattered.png) repeat 0 0;
 }
@@ -62,4 +62,44 @@ h1{
     color: #ced1d4;
     font-size: .35em;
     font-weight: normal;
+}
+.small_margin_bottom{
+    margin-bottom: 5px;
+}
+.small_margin_top{
+    margin-top: 5px;
+}
+.medium_margin_bottom{
+    margin-bottom: 10px;
+}
+.medium_margin_top{
+    margin-top: 10px;
+}
+.well-small{
+    margin-bottom: 10px;
+}
+.link_button{
+    text-decoration: underline;
+}
+.center{
+    text-align: center;
+}
+#user_info{
+    font-size: .3em;
+    margin-top: 20px;
+    margin-right: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: normal;
+}
+.light_text{
+    color: #ced1d4;
+}
+#locked_text{
+    color: #990000;
+}
+#next_unlock_text{
+    color: #0033CC;
+}
+#please_logon_text{
+    color: #009933;
 }

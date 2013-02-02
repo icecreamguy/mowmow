@@ -17,71 +17,62 @@
         <div class='containter-fluid'>
             <!-- Header Row -->
             <div class="row-fluid">
-                <div id="title" class="pull-left">
-                    Baileyface
-                    <span id="subtitle">
-                        Feed the Bailey!
-                    </span> 
-                </div>
-                <div class="pull-right">
-                    <div id="user_info" class="hidden">
-                        Logged in as <span id="user_name"></span>
-                        <br>
-                        <button id="logout" class="btn">Log Out</button>
-                    </div>
-                    <!-- Login Form -->
-                    <form id="login_form" >
-                        <input name="email_field" type="text" 
-                            placeholder="email address">
-                        <input name="pass_field" type="password" 
-                            placeholder="password">
-                        <br>
-                        <button name="submit" class="btn">
-                            Login
-                        </button>
-                        <button id="new_account" class="btn">
-                            New Account
-                        </button>
-                    </form>
-                    <div id="loading_image_2">
-                        <img src="img/loading.gif" alt="loading...">
-                    </div>
-                    <span id="user_confirm" class="label label-success hidden">
-                    </span>
-                    <span id="user_err" class="label label-important hidden">
-                    </span>
+                <div class="page-header">
+                    <h1>Baileyface<small> Feed the Bailey!</small>
+                        <div id="user_info" class="pull-right">
+                            <div id="user_confirm"
+                                class="label label-success hidden pull-right">
+                            </div>
+                            <span class="logged_in">
+                                Logged in as <span id="user_name"></span>.
+                                <a href="#" id="logout" class="link_button">
+                                    Log out
+                                </a>
+                            </span>
+                        </div>
+                    </h1>
                 </div>
             </div>
             <div class="row-fluid">
                 <!-- Navigation column -->
-                <div class="span3">
-                    <div class="well sidebar-nav">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">
-                                What would you like to do mow?
-                            <li class="nav-item">
-                            <button id="take_photo_button" class="btn btn-block">
-                                <i class='icon-heart'></i> Feed the Bailey!
+                <div class="span3 well-small">
+                    <div class="" id="status_area"></div>
+                    <hr>
+                    <div class="logged_out">
+                        <!-- Login Form -->
+                        <form id="login_form" class="small_margin_bottom logged_out">
+                            <input name="email_field" type="text" 
+                                placeholder="email address">
+                            <input name="pass_field" type="password" 
+                                placeholder="password">
+                            <br>
+                            <button name="submit" class="btn">
+                                Login
                             </button>
-                            </li>
-                            <li class="nav-item">
-                            <button id="show_recent_photos"
-                                class="btn btn-block">
-                                    <i class='icon-camera'></i> Recent Photos
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button id="show_date_picker" class="btn btn-block">
-                                    <i class='icon-calendar'></i> Photos by Date
-                                </button>
-                                <br>
-                                <div id="date_picker_container">
-                                    <span id="date_picker"></span>
-                                </div>
-                            </li>
-                        </ul>
+                            <button id="new_account" class="btn">
+                                New Account
+                            </button>
+                        </form>
+                        <div id="loading_image_2">
+                            <img src="img/loading.gif" alt="loading...">
+                        </div>
+                        <span id="user_err" class="label label-important hidden">
+                        </span>
+                    </div>
+                    <div class="sidebar-nav">
+                        <button id="show_date_picker"
+                            class="btn medium_margin_bottom">
+                            <i class='icon-calendar'></i>
+                            Browse Photos by Date
+                        </button>
+                        <div id="date_picker_container" class="">
+                            <a href="#" id="show_recent_photos"
+                                class="link_button medium_margin_bottom medium_margin_top">
+                                Back to most recent
+                            </a>
+                            <span id="date_picker"></span>
+                        </div>
                     </div> 
-                    <div class="well" id="status_area"></div>
                 </div><!-- !Sidebar Navigation -->
 
                 <!-- Main column for photo display -->
@@ -90,7 +81,10 @@
                         Feeding the cat!
                         <img src="img/nomnom.gif" alt="loading...">
                         omnomnomnomnom...
-`                    </div>
+                    </div>
+                    <div id="stats_area" class="hidden">
+                        Stats here
+                    </div>
                     <h2 id="photo_display_header"></h2>
                     <ul class="thumbnails" id="thumbs"></ul>
                 </div><!-- !Main Column -->
@@ -197,19 +191,44 @@
         </script>
         
         <script id="status_template" type="text/template">
-            <dl>
-                <dt>Bailey's last nomtime was at</dt>
-                <dd>{{last_nomtime}} {{tz}}</dd><br>
-                <dt>The next scheduled feeding time is from</dt>
-                <dd>
-                    {{next_nom_start}} until
-                    {{next_nom_end}} {{tz}} 
-                    {{next_start_day}}
-                </dd>
-                <br>
-                <dt>Can you click the "Feed" button RIGHT NOW?</dt>
-                <dd>{{lock}}!</dd><br>
-            </dl>
+            <span class="small_margin_bottom small_margin_top">
+                <h3>How this site works:</h3>
+                <p>
+                Bailey gets to eat food twice each day. For a two hour period
+                leading up to her scheduled meal time, you can feed her early.
+                Getting fed early is like winning the lottery for Bailey. She
+                doesn't remember ever eating before. All she knows is that she is
+                <i><b>starving</b></i>. Help her live her dream by feeding her a
+                little early.
+                </p>
+                {{#lock}}
+                <p id="locked_text"><b>
+                    {{#fed}}
+                        Sorry, someone's already fed her!
+                    {{/fed}}
+                    {{^fed}}
+                        Sorry, you can't feed Bailey this far before her next meal.
+                    {{/fed}}
+                    <p id='next_unlock_text'>
+                    The feeder will be unlocked next between {{next_nom_start}}
+                    and {{next_nom_end}} {{tz}} {{next_start_day}}
+                    </p>
+                </b></p>
+                {{/lock}}
+                {{^lock}}
+                    {{^user_name}}
+                    <span id="please_logon_text"><b>
+                        If you log on or create an account, you can feed her right
+                        now!
+                    </b></span>
+                    {{/user_name}}
+                    <button id="take_photo_button"
+                        class="btn logged_in medium_margin_bottom">
+                        <i class='icon-heart'></i>
+                        Feed the Bailey!
+                    </button>
+                {{/lock}}
+            </span>
         </script>
 
         <script id="new_account_alert_template" type="text/template">

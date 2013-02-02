@@ -36,7 +36,7 @@ $(document).ready(function() {
         dateFormat: 'yy-mm-dd'
     });
 
-    take_photo_button.click(function() {
+    $(document).on("click", "#take_photo_button", function() {
         // Activate the camera. if the camera class loads with a POST dictionary
         // key of "capture" it will take a photo. The value doesn't actually do
         // anything
@@ -77,12 +77,13 @@ $(document).ready(function() {
         $.post('api/login/existing', $(this).serialize(), function (token) {
             if (token != 'false') {
                 $.cookies.set('auth_token', token);
-                $('#user_confirm').html('Logged in!').show();
+                $('#user_confirm').html('Logged in!').show().fadeOut(2000);
                 $('#user_err').hide();
                 setup();
             }
             else {
-                $('#user_err').html('Incorrect email or password').show();
+                $('#user_err').html('Incorrect email or password').show()
+                    .fadeOut(2000);
                 setup();
             }
         });
@@ -139,10 +140,11 @@ $(document).ready(function() {
 function logout_user(auth_token) {
     $.post('api/logout', {auth_token:auth_token}, function(data) {
         if (data) {
-            $('#user_confirm').html('Logged out successfully').show();
+            $('#user_confirm').html('Logged out successfully').show().fadeOut(2000);
         }
         else {
-            $('#user_confirm').html('There was a problem logging you out').show();
+            $('#user_confirm').html('There was a problem logging you out').show()
+                .fadeOut(2000);
         }
 
     });
@@ -167,24 +169,24 @@ function setup(){
     $.getJSON('api/status', function(mow_status){
         var status_template = $('#status_template').html();
 
-        if (mow_status.lock){ mow_status.lock = 'No'; }
-        else{ mow_status.lock = 'Yes'; }
+        //if (mow_status.lock){ mow_status.lock = 'No'; }
+        //else{ mow_status.lock = 'Yes'; }
 
         mow_status.last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
         mow_status.last_nomtime = mow_status.last_nomtime.toLocaleTimeString() +
             ' ' + mow_status.last_nomtime.toLocaleDateString();
         
         $('#status_area').html(Mustache.to_html(status_template, mow_status));
-
         if (mow_status.user_name) {
             $('#user_name').html(mow_status.user_name);
-            $('#login_form').hide();
-            $('#user_info').show();
+            $('.logged_out').hide();
+            $('.logged_in').show();
         }
         else {
             $('#login_form').show();
-            $('#user_info').hide();
-        }
+            $('.logged_in').hide();
+            $('.logged_out').show();
+        } 
 
         // fill placeholders in IE with this sweet plugin from
         // https://github.com/jamesallardice/Placeholders.js
@@ -230,9 +232,12 @@ function parse_photos(){
     // Fix for margin bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
     // on the bootstrap bug tracker
     (function($){
-        $('.row-fluid ul.thumbnails li.span6:nth-child(2n + 3)').css('margin-left','0px');
-        $('.row-fluid ul.thumbnails li.span4:nth-child(3n + 4)').css('margin-left','0px');
-        $('.row-fluid ul.thumbnails li.span3:nth-child(4n + 5)').css('margin-left','0px'); 
+        $('.row-fluid ul.thumbnails li.span6:nth-child(2n + 3)')
+            .css('margin-left','0px');
+        $('.row-fluid ul.thumbnails li.span4:nth-child(3n + 4)')
+            .css('margin-left','0px');
+        $('.row-fluid ul.thumbnails li.span3:nth-child(4n + 5)')
+            .css('margin-left','0px'); 
     })(jQuery);
 }
 
