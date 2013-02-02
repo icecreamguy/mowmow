@@ -16,7 +16,7 @@ urls = (
     '/status', 'status',
     '/login/?(new|existing)?', 'login',
     '/logout', 'logout',
-    '/stats/(top_feeders)', 'stats',
+    '/stats/(top_users)', 'stats',
 )
 
 # Doing this correctly finally and keeping the model logic organized. This goes
@@ -24,7 +24,11 @@ urls = (
 class stats:
     def GET(self, req_path):
         from models import stats_model
-        return stats_model.get(req_path)
+
+        # No cache during testing
+        web.header('cache-control', 'max-age=0')
+        #return stats_model.get(req_path)
+        return json.dumps(stats_model.get(req_path))
 
 class login:
     def POST(self, req_path):
