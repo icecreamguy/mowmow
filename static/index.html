@@ -25,8 +25,7 @@
                             </div>
                             <span class="logged_in">
                                 Logged in as <span id="user_name"></span>.
-                                <a href="#" id="logout" class="link_button">
-                                    Log out
+                                <a href="#" id="logout" class="btn-link">Log out
                                 </a>
                             </span>
                         </div>
@@ -40,11 +39,13 @@
                     <hr>
                     <div class="logged_out">
                         <!-- Login Form -->
-                        <form id="login_form" class="small_margin_bottom logged_out">
+                        <form id="login_form"
+                            class="small_margin_bottom logged_out">
                             <input name="email_field" type="text" 
-                                placeholder="email address">
+                            placeholder="email address"
+                            class="span9">
                             <input name="pass_field" type="password" 
-                                placeholder="password">
+                                placeholder="password" class="span9">
                             <br>
                             <button name="submit" class="btn">
                                 Login
@@ -52,6 +53,7 @@
                             <button id="new_account" class="btn">
                                 New Account
                             </button>
+                            <hr>
                         </form>
                         <div id="loading_image_2">
                             <img src="img/loading.gif" alt="loading...">
@@ -60,19 +62,39 @@
                         </span>
                     </div>
                     <div class="sidebar-nav">
-                        <button id="show_date_picker"
-                            class="btn medium_margin_bottom">
+                        <button class="btn medium_margin_bottom btn-block"
+                            data-toggle="collapse" data-target="#about_container">
+                            <i class='icon-question-sign'></i>
+                            How Does This Site Work?
+                        </button>
+                        <div id="about_container" class="collapse">
+                            <div class="well">
+                            Bailey gets fed twice each day by an automated food
+                            dish. For a two hour period leading up to her scheduled
+                            meal time, you can feed her early. Getting fed early is
+                            like winning the lottery for a cat. She doesn't remember
+                            ever eating before. All she knows is that she is <i><b>
+                            starving</b></i>. Help her live her dream, and watch how
+                            excited she gets!
+                            </div>
+                        </div>
+                        <button class="btn btn-block" data-toggle="collapse"
+                            data-target="#date-picker-container">
                             <i class='icon-calendar'></i>
                             Browse Photos by Date
                         </button>
-                        <div id="date_picker_container" class="">
+                        <div id="date-picker-container" class="collapse">
+                            <i class='icon-arrow-left'></i>
                             <a href="#" id="show_recent_photos"
-                                class="link_button medium_margin_bottom medium_margin_top">
+                                class="btn-link medium_margin_bottom
+                                medium_margin_top">
                                 Back to most recent
                             </a>
                             <span id="date_picker"></span>
                         </div>
                     </div> 
+                    <hr>
+                    <div id="stats_area"></div>
                 </div><!-- !Sidebar Navigation -->
 
                 <!-- Main column for photo display -->
@@ -82,9 +104,6 @@
                         <img src="img/nomnom.gif" alt="loading...">
                         omnomnomnomnom...
                     </div>
-                    <div id="stats_area" class="hidden">
-                        Stats here
-                    </div>
                     <h2 id="photo_display_header"></h2>
                     <ul class="thumbnails" id="thumbs"></ul>
                 </div><!-- !Main Column -->
@@ -92,7 +111,7 @@
             <div class="row-fluid" id="footer">
                 <span class="span2"></span>
                 <div class="span8" id="license">
-                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Baileyface images</span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://codeplasma.com" property="cc:attributionName" rel="cc:attributionURL">Julius Schlosburg</a>are licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a><br><a href="https://github.com/icecreamguy/mowmow">Source Code</a>.
+                    <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Baileyface images</span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://codeplasma.com" property="cc:attributionName" rel="cc:attributionURL">Julius Schlosburg</a> are licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a><br><a href="https://github.com/icecreamguy/mowmow">Source Code on GitHub</a>
                 </div>
                 <span class="span2"></span>
             </div>
@@ -191,26 +210,16 @@
         </script>
         
         <script id="status_template" type="text/template">
-            <span class="small_margin_bottom small_margin_top">
-                <h3>How this site works:</h3>
-                <p>
-                Bailey gets to eat food twice each day. For a two hour period
-                leading up to her scheduled meal time, you can feed her early.
-                Getting fed early is like winning the lottery for Bailey. She
-                doesn't remember ever eating before. All she knows is that she is
-                <i><b>starving</b></i>. Help her live her dream by feeding her a
-                little early.
-                </p>
                 {{#lock}}
                 <p id="locked_text"><b>
                     {{#fed}}
-                        Sorry, someone's already fed her!
+                        Sorry, someone's already fed Bailey!
                     {{/fed}}
                     {{^fed}}
                         Sorry, you can't feed Bailey this far before her next meal.
                     {{/fed}}
                     <p id='next_unlock_text'>
-                    The feeder will be unlocked next between {{next_nom_start}}
+                    The next time you can feed her will be between {{next_nom_start}}
                     and {{next_nom_end}} {{tz}} {{next_start_day}}
                     </p>
                 </b></p>
@@ -222,13 +231,14 @@
                         now!
                     </b></span>
                     {{/user_name}}
-                    <button id="take_photo_button"
-                        class="btn logged_in medium_margin_bottom">
-                        <i class='icon-heart'></i>
-                        Feed the Bailey!
-                    </button>
+                    {{#user_name}}
+                        <button id="take_photo_button"
+                            class="btn btn-large btn-block">
+                            <i class='icon-heart'></i>
+                            Feed the Bailey!
+                        </button>
+                    {{/user_name}}
                 {{/lock}}
-            </span>
         </script>
 
         <script id="new_account_alert_template" type="text/template">
@@ -236,6 +246,15 @@
                 {{#message}}
                     <li>{{.}}</li>
                 {{/message}}
+            </ul>
+        </script>
+
+        <script id="stats_template" type="text/template">
+            <h4>Who's fed Bailey the most?</h4>
+            <ul class="unstyled well">
+                {{#top_users}}
+                <li><b>{{name}}</b> has fed Bailey {{count}} times.</li>
+                {{/top_users}}
             </ul>
         </script>
 

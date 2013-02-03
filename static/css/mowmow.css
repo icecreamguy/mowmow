@@ -78,9 +78,6 @@ h1{
 .well-small{
     margin-bottom: 10px;
 }
-.link_button{
-    text-decoration: underline;
-}
 .center{
     text-align: center;
 }
@@ -98,8 +95,13 @@ h1{
     color: #990000;
 }
 #next_unlock_text{
-    color: #0033CC;
 }
 #please_logon_text{
     color: #009933;
+}
+.large{
+    font-size: 1.2em;
+}
+.pad_box{
+    padding: 10px;
 }

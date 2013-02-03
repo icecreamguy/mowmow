@@ -8,8 +8,8 @@ def get(req_path):
             'WHERE nomnoms.user_id = users.id '
             'GROUP BY users.name ORDER BY count DESC LIMIT 5'
         )
-        top_users = {}
+        top_users = []
         for user in top_users_data:
-            top_users[user['name']] = user['count']
-        return top_users
+            top_users.append(user)
+        return {'top_users': top_users}
 

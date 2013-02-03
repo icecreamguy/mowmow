@@ -1,10 +1,10 @@
 var current_photos = "";
+var stats_template = $('#stats_template').html();
 
 $(document).ready(function() {
     // Pull as much as possible out of the DOM into variables
     var buttons = $(".button");
     var show_recent_photos_button = $("#show_recent_photos");
-    var show_date_picker_button = $("#show_date_picker");
     var take_photo_button = $("#take_photo_button");
     var date_picker_container = $("#date_picker_container");
     var date_picker = $('#date_picker');
@@ -26,10 +26,6 @@ $(document).ready(function() {
 
     // Bind events to the buttons
     show_recent_photos_button.click(update_recent_photos);
-
-    show_date_picker_button.click(function(){
-        date_picker_container.fadeToggle('fast');
-    });
 
     date_picker.datepicker({
         onSelect: show_photos_by_date,
@@ -195,8 +191,10 @@ function setup(){
         // Hide the loading image in case anything was loading
         $("#loading_image_2").hide();
         $("#loading_image_3").hide();
-
-   });
+    });
+    $.getJSON('api/stats/top_users', function (top_users) {
+        $('#stats_area').html(Mustache.to_html(stats_template, top_users));
+    });
 }
 
 
