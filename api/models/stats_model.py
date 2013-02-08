@@ -6,7 +6,8 @@ def get(req_path):
             'SELECT name, count(nomnoms.id) as count '
             'FROM users,nomnoms '
             'WHERE nomnoms.user_id = users.id '
-            'GROUP BY users.name ORDER BY count DESC LIMIT 5'
+            'AND users.id != 1 '
+            'GROUP BY users.name ORDER BY count DESC LIMIT 6'
         )
         top_users = []
         for user in top_users_data:
