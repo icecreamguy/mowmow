@@ -171,6 +171,13 @@ function setup(){
         mow_status.last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
         mow_status.last_nomtime = mow_status.last_nomtime.toLocaleTimeString() +
             ' ' + mow_status.last_nomtime.toLocaleDateString();
+    
+        // Customize the status a little if the user was the last person to
+        // feed Bailey
+        if (mow_status.last_feeder == mow_status.user_name) {
+            mow_status.baileys_hero = true;
+            mow_status.last_feeder = 'you';
+        }
         
         $('#status_area').html(Mustache.to_html(status_template, mow_status));
         if (mow_status.user_name) {

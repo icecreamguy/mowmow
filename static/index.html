@@ -213,10 +213,20 @@
                 {{#lock}}
                 <p id="locked_text"><b>
                     {{#fed}}
-                        Sorry, someone's already fed Bailey!
+                        Sorry, {{last_feeder}} already fed Bailey!
+                        {{#baileys_hero}}
+                            <p>Hooray! You're the greatest!</p>
+                        {{/baileys_hero}}
                     {{/fed}}
                     {{^fed}}
                         Sorry, you can't feed Bailey this far before her next meal.
+                        {{#baileys_hero}}
+                            <p> You were the last person to feed Bailey. 
+                            Hooray! You're the greatest!  </p>
+                        {{/baileys_hero}}
+                        {{^baileys_hero}}
+                            <p>{{last_feeder}} fed her last.</p>
+                        {{/baileys_hero}}
                     {{/fed}}
                     <p id='next_unlock_text'>
                     The next time you can feed her will be between {{next_nom_start}}

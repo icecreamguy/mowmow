@@ -94,17 +94,18 @@ def get_status(auth_token):
     # List to be used in next-feed-time calculations
     nom_times_left = []
 
-    db_last_nom = list(config.db.select('nomnoms',
-        what='time_stamp',
-        limit=1,
-        order='time_stamp DESC'
-    ))
+    db_last_nom = list(config.db.query('SELECT nomnoms.time_stamp,name '
+        'FROM nomnoms,users '
+        'WHERE nomnoms.user_id = users.id '
+        'ORDER BY nomnoms.time_stamp DESC '
+        'LIMIT 1'))
 
     # If there are no DB entries at least set some date for the last feeding time
     if db_last_nom.__len__() < 1:
         status.last_nomtime = datetime(2000, 1, 1, 0, 0)
     else:
         status.last_nomtime = db_last_nom[0].time_stamp
+        status.last_feeder = db_last_nom[0].name
 
     time_now = datetime.today().time()
     day_now = datetime.today().date()
