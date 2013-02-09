@@ -16,11 +16,7 @@ from web import utils
 # group is active at a time. Example strings:
 # Date request for 2012/11/06 - /photos/date/2012-11-26
 # Request for the 6 most recent photos - /photos/recent/6
-date_regex_string = ("/photo/((?:date/(?:19|20\d\d)-(?:0[1-9]|1[012])-(?:0[1-9]|[12"
-                     "][0-9]|3[01]))$|recent/\d{1,2}$)")
-
-photo_path_regex_string = ("date/((?:19|20\d\d)-(?:0[1-9]|1[012])-(?:0[1-9]|[12][0-"
-                           "9]|3[01]))$|recent/(\d{1,2})$")
+date_regex_string = ("/photo/((?:date/(?:19|20\d\d)-(?:0[1-9]|1[012])-(?:0[1-9]|[12" "][0-9]|3[01]))$|recent/\d{1,2}$)")
 
 # Saw this on stackoverflow from user tzot - 
 # http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
@@ -53,16 +49,6 @@ def make_imgfolder_string(img_root, date_strings):
 def folder_string_from_mysql(mysql_date_string):
     return re.sub('-','/',str(mysql_date_string)) 
 
-def obj_from_photo_path(path):
-    request = {}
-    photo_path_regex = re.compile(photo_path_regex_string)
-    groups = photo_path_regex.match(path).groups()
-    # Put the results in a small dictionary based on what matched
-    if groups[1]:
-        request = {'recent': groups[1]}
-    else:
-        request = {'date': groups[0]}
-    return request
 
 # Needed to extend the JSONEncoder to support MySQL dates. Pretty much straight
 # from the python documentation

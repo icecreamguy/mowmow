@@ -61,32 +61,9 @@ class nomnom:
 # date or as a list of the most recent photos
 class photo:
     def GET(self, req_path):
+        from models import photo_model
         inputs = web.input()
-        request = mow_utils.obj_from_photo_path(req_path)
-        # TODO: validate the request['recent'] string
-        if 'recent' in request:
-            response = db.query('SELECT cycle_name,nomnoms.time_stamp,file_name,'
-                                'file_path,users.name '
-                                'FROM photo,nomnoms,users '
-                                'WHERE photo.nomnom_id = nomnoms.id '
-                                'AND nomnoms.user_id = users.id '
-                                'ORDER BY nomnoms.time_stamp DESC '
-                                'LIMIT ' + request['recent'])
-            # Copy the db results out so that they can be postprocessed properly by
-            # the JSONEncoder class
-            response_list = list(response)
-            return json.dumps(response_list, cls=mow_utils.webpy_db_encoder)
-        elif 'date' in request:
-            response = db.query('SELECT cycle_name,nomnoms.time_stamp,file_name,'
-                                'file_path,users.name '
-                                'FROM photo,nomnoms,users '
-                                'WHERE photo.nomnom_id = nomnoms.id '
-                                'AND nomnoms.user_id = users.id '
-                                'AND DATE(nomnoms.time_stamp) LIKE $date '
-                                'ORDER BY nomnoms.time_stamp DESC', vars=request)
-            response_list = list(response)
-            return json.dumps(response_list, cls=mow_utils.webpy_db_encoder)
-        return
+        return json.dumps(photo_model.get(req_path, inputs), cls=mow_utils.webpy_db_encoder)
 
 class status:
     def GET(self):
