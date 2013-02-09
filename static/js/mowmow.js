@@ -1,4 +1,4 @@
-var current_photos = "";
+var current_photos = {}
 var stats_template = $('#stats_template').html();
 
 $(document).ready(function() {
@@ -221,18 +221,42 @@ function init_photo_display(section_title){
 }
 
 function parse_photos(){
-    // Iterate over the photos and add them to the photo display div
-    var photo_template = $('#photo_template').html();
-    $.each(current_photos, function(index,photo){
-        photo.index = index;
-        photo.thumb_file_name = photo.file_name.replace('.png','_thumb.png');
-        if (!photo.cycle_name){
-            photo.cycle_name = 'unknown';
-        }
-        $('#thumbs').append(Mustache.to_html(photo_template, photo));
-        // Fade in the area so it looks cool
-        $("#thumbs").fadeIn('slow');
-    });
+    var photo_set_template = $('#photo_set_template').html();
+
+    // Iterate over the photo sets and add them to the photo display div
+    //$.each(current_photos, function (set_id, photo_set) {
+    //for (photo_set in current_photos) {
+     //   console.log('appending photo template ' + photo_set.time_stamp);
+    console.log(current_photos.photo_sets);
+    $('#thumbs').append(Mustache.to_html(photo_set_template, current_photos));
+    //});
+        
+//     $.each(current_photos, function (set_id, photo_set) {
+//         // Handle the old records before a cycle name was added. Should
+//         // probably fix this in the database at some point
+//         if (!photo_set.cycle_name) {
+//             photo_set.cycle_name = 'unknown';
+//         }
+//         for (var i = 0; i < photo_set.photos.length; i++) {
+//             photo_set.photos[i].thumb_file_name = photo_set.photos[i].file_name
+//             .replace('.png', '_thumb.png');
+//         }
+//     });
+
+//     $.each(current_photos, function(set_id, photo_set){
+//         for (photo in photo_set) {
+//             console.log(photo);
+//             photo.index = set_id;
+//             photo.thumb_file_name = photo.file_name.replace('.png','_thumb.png');
+//             if (!photo.cycle_name){
+//                 photo.cycle_name = 'unknown';
+//             }
+//         }
+//         console.log(current_photos)
+//         $('#thumbs').append(Mustache.to_html(photo_template, photo_set));
+//         // Fade in the area so it looks cool
+//         $("#thumbs").fadeIn('slow');
+//     });
 
     // Fix for margin bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
     // on the bootstrap bug tracker

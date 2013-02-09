@@ -105,7 +105,7 @@
                         omnomnomnomnom...
                     </div>
                     <h2 id="photo_display_header"></h2>
-                    <ul class="thumbnails" id="thumbs"></ul>
+                    <div class="thumbnails" id="thumbs"></div>
                 </div><!-- !Main Column -->
             </div><!-- !Main row -->
             <div class="row-fluid" id="footer">
@@ -198,15 +198,27 @@
         </div>
 
         <!-- Templates -->
-        <script id="photo_template" type="text/template">
-            <li class="span3">
-                <div class="thumbnail">
-                    <img src="{{file_path}}/{{thumb_file_name}}" class="photo"
-                        data-photo_id="{{index}}">
-                        {{time_stamp}} <br> {{cycle_name}} cycle <br>
-                        fed by {{name}}
+        <script id="photo_set_template" type="text/template">
+            {{#photo_sets}}
+                <div class="well a row-fluid photo_set">
                 </div>
-            </li>
+            {{/photo_sets}}
+        </script>
+        
+        <script id="photo_set_template0" type="text/template">
+            {{#photo_sets}}
+                <div class="well row-fluid photo_set">
+                    {{#.}}
+                    <li class="span3">
+                        <div class="thumbnail">
+                            <img src="{{.file_path}}/{{thumb_file_name}}" class="photo"
+                                data-photo_id="{{index}}">
+                            {{time_stamp}} <br> {{cycle_name}} cycle <br> fed by {{name}}
+                        </div>
+                    </li>
+                    {{/.}}
+                </div>
+            {{/photo_sets}}
         </script>
         
         <script id="status_template" type="text/template">
