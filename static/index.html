@@ -199,26 +199,23 @@
 
         <!-- Templates -->
         <script id="photo_set_template" type="text/template">
-            {{#photo_sets}}
-                <div class="well a row-fluid photo_set">
+            {{#.}}
+                <div class="well row-fluid photo_set">
+                    <ul id="set_{{id}}"></ul>
+                    This set was taken at {{time_stamp}} as part of the
+                    <b>{{cycle_name}}</b> cycle, by {{name}}
                 </div>
-            {{/photo_sets}}
+            {{/.}}
         </script>
         
-        <script id="photo_set_template0" type="text/template">
-            {{#photo_sets}}
-                <div class="well row-fluid photo_set">
-                    {{#.}}
-                    <li class="span3">
-                        <div class="thumbnail">
-                            <img src="{{.file_path}}/{{thumb_file_name}}" class="photo"
-                                data-photo_id="{{index}}">
-                            {{time_stamp}} <br> {{cycle_name}} cycle <br> fed by {{name}}
-                        </div>
-                    </li>
-                    {{/.}}
+        <script id="photo_template" type="text/template">
+            {{#.}}
+            <li class="span3">
+                <div class="thumbnail">
+                    <img src="{{file_path}}/{{file_name}}" class="photo">
                 </div>
-            {{/photo_sets}}
+            </li>
+            {{/.}}
         </script>
         
         <script id="status_template" type="text/template">
