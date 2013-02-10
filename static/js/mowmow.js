@@ -113,10 +113,12 @@ $(document).ready(function() {
     // Attach click event handler on all future individual photos to show
     // a modal with that photo
     thumbnails_list.on("click", "li div", function (event) {
+        console.log(this);
         src = $(this).children('img').attr('src');
-        index = $(this).children('img').attr('data-photo_id');
+        photo_index = $(this).children('img').attr('data-photo_index');
+        set_index = $(this).children('img').attr('data-set_index');
         label = $(this).children('span').html();
-        show_photo(current_photos[index])
+        show_photo(set_index, photo_index)
     });
 
     // Click handler to diplay the new account modal
@@ -225,6 +227,18 @@ function parse_photos(){
     var photo_set_template = $('#photo_set_template').html();
     var photo_template = $('#photo_template').html();
 
+    // Add in some index information, as well as the thumbnail name
+    for (var i_0 = 0; i_0 < photo_sets.length; i_0++) {
+        if (!photo_sets[i_0].cycle_name) {
+            photo_sets[i_0].cycle_name = 'unknown';
+        }
+        for (var i_1 = 0; i_1 < photo_sets[i_0].photos.length; i_1++) {
+            photo_sets[i_0].photos[i_1].photo_index = i_1;
+            photo_sets[i_0].photos[i_1].set_index = i_0;
+            photo_sets[i_0].photos[i_1].thumb_name = photo_sets[i_0].photos[i_1].
+                file_name.replace('.png','_thumb.png');
+        }
+    }
     $('#thumbs').append(Mustache.to_html(photo_set_template, photo_sets));
     $('#thumbs').fadeIn('slow');
 }
@@ -239,12 +253,17 @@ function print_r(objects){
     return string;
 }
 
-function show_photo (photo) {
+function show_photo (set_index, photo_index) {
     var photo_modal = $('#photo_modal');
     var modal_label = $('#photo_label');
     var modal_image = $('#modal_image');
-    modal_label.html(photo.time_stamp + ', ' + photo.cycle_name + ' cycle');
-    modal_image.attr('src', (photo.file_path + '/' + photo.file_name));
+    modal_label.html(
+            photo_sets[set_index].cycle_name + ' cycle' + ', ' +
+            photo_sets[set_index].time_stamp);
+    modal_image.attr('src', (
+                photo_sets[set_index].photos[photo_index].file_path +
+                '/' +
+                photo_sets[set_index].photos[photo_index].file_name));
     photo_modal.modal('show');
 }
 

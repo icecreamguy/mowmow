@@ -69,13 +69,23 @@
                         </button>
                         <div id="about_container" class="collapse">
                             <div class="well">
+                            <p>
                             Bailey gets fed twice each day by an automated food
                             dish. For a two hour period leading up to her scheduled
                             meal time, you can feed her early. Getting fed early is
                             like winning the lottery for a cat. She doesn't remember
                             ever eating before. All she knows is that she is <i><b>
-                            starving</b></i>. Help her live her dream, and watch how
-                            excited she gets!
+                            starving</b></i>. Help her live her dream!
+                            </p><p>
+                            To use the feeder, you must first create an account.
+                            Anyone can create an account! To browse older photos, 
+                            click the button below.
+                            </p>
+                            <button class="btn-tiny"
+                                data-toggle="collapse"
+                                data-target="#about_container">
+                                <i class='icon-arrow-up'></i> Close
+                            </button>
                             </div>
                         </div>
                         <button class="btn btn-block" data-toggle="collapse"
@@ -202,7 +212,7 @@
             {{#.}}
                 <div class="row photo_set">
                     <span class="photo_set_label">
-                        Fed by <b>{{name}}</b> as part of the {{cycle_name}}
+                        Fed by <b>{{name}}</b> during the {{cycle_name}}
                      cycle at {{time_stamp}}
                     </span>
                     <ul class="photo_ul">
@@ -210,6 +220,8 @@
                             <li class="span3">
                                 <div class="thumbnail">
                                     <img src="{{file_path}}/{{thumb_name}}"
+                                    data-photo_index="{{photo_index}}"
+                                    data-set_index="{{set_index}}"
                                     class="photo">
                                 </div>
                             </li>
