@@ -113,7 +113,6 @@ $(document).ready(function() {
     // Attach click event handler on all future individual photos to show
     // a modal with that photo
     thumbnails_list.on("click", "li div", function (event) {
-        console.log(this);
         src = $(this).children('img').attr('src');
         photo_index = $(this).children('img').attr('data-photo_index');
         set_index = $(this).children('img').attr('data-set_index');
