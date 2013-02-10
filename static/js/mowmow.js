@@ -225,7 +225,6 @@ function parse_photos(){
     var photo_set_template = $('#photo_set_template').html();
     var photo_template = $('#photo_template').html();
 
-    // Iterate over the photo sets and add them to the photo display div
     $('#thumbs').append(Mustache.to_html(photo_set_template, photo_sets));
     $('#thumbs').fadeIn('slow');
 }
@@ -252,4 +251,8 @@ function show_photo (photo) {
 function auth_user (auth_token) {
     $.getJSON('api/login/auth/' + auth_token, function () {
     });
+}
+
+function get_thumb_from_filename (file_name) {
+    return filename.replace('.png', '_thumb.png');
 }

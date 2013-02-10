@@ -42,6 +42,9 @@ def fill_photo_set(photo_set):
             where = 'nomnom_id = $id',
             vars = photo_set)
     photo_set.photos = photos.list()
+    for index, photo in enumerate(photo_set.photos):
+        photo_set.photos[index].thumb_name = photo.file_name.replace(
+            '.png', '_thumb.png')
     return photo_set
 
 def obj_from_photo_path(path):
