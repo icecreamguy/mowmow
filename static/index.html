@@ -200,21 +200,22 @@
         <!-- Templates -->
         <script id="photo_set_template" type="text/template">
             {{#.}}
-                <div class="well row-fluid photo_set">
-                    <ul id="set_{{id}}"></ul>
-                    This set was taken at {{time_stamp}} as part of the
-                    <b>{{cycle_name}}</b> cycle, by {{name}}
+                <div class="row photo_set">
+                    <span class="photo_set_label">
+                        Fed by <b>{{name}}</b> as part of the {{cycle_name}}
+                     cycle at {{time_stamp}}
+                    </span>
+                    <ul class="photo_ul">
+                        {{#photos}}
+                            <li class="span3">
+                                <div class="thumbnail">
+                                    <img src="{{file_path}}/{{file_name}}"
+                                    class="photo">
+                                </div>
+                            </li>
+                        {{/photos}}
+                    </ul>
                 </div>
-            {{/.}}
-        </script>
-        
-        <script id="photo_template" type="text/template">
-            {{#.}}
-            <li class="span3">
-                <div class="thumbnail">
-                    <img src="{{file_path}}/{{file_name}}" class="photo">
-                </div>
-            </li>
             {{/.}}
         </script>
         
@@ -234,7 +235,8 @@
                             Hooray! You're the greatest!  </p>
                         {{/baileys_hero}}
                         {{^baileys_hero}}
-                            <p>{{last_feeder}} fed her last.</p>
+                        <p>{{last_feeder}} fed her last. Bailey loves
+                        {{last_feeder}} the most.</p>
                         {{/baileys_hero}}
                     {{/fed}}
                     <p id='next_unlock_text'>

@@ -16,7 +16,7 @@ from web import utils
 # group is active at a time. Example strings:
 # Date request for 2012/11/06 - /photos/date/2012-11-26
 # Request for the 6 most recent photos - /photos/recent/6
-date_regex_string = ("/photo/((?:date/(?:19|20\d\d)-(?:0[1-9]|1[012])-(?:0[1-9]|[12" "][0-9]|3[01]))$|recent$|(?:photo_set/\d+)$)")
+date_regex_string = ("/photo/((?:date/(?:19|20\d\d)-(?:0[1-9]|1[012])-(?:0[1-9]|[12" "][0-9]|3[01]))$|recent$)")
 
 # Saw this on stackoverflow from user tzot - 
 # http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python

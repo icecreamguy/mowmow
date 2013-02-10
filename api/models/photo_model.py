@@ -4,7 +4,7 @@ from config import db
 # This parses the photo path. If there's a date, it'll pull the date out, likewise
 # with a photo set id
 photo_path_regex_string = ("date/((?:19|20\d\d)-(?:0[1-9]|1[012])-(?:0[1-9]|[12][0-"
-    "9]|3[01]))$|recent$|photo_set/(\d+)$")
+    "9]|3[01]))$|recent$")
 
 def get(req_path, inputs):
     request = obj_from_photo_path(req_path)
@@ -20,15 +20,14 @@ def get(req_path, inputs):
         photo_sets_filled = [fill_photo_set(photo_set) for photo_set in photo_sets]
         return photo_sets_filled
     elif 'date' in request:
-        response = db.query('SELECT cycle_name,nomnoms.time_stamp,file_name,'
-                            'file_path,users.name '
-                            'FROM photo,nomnoms,users '
-                            'WHERE photo.nomnom_id = nomnoms.id '
-                            'AND nomnoms.user_id = users.id '
-                            'AND DATE(nomnoms.time_stamp) LIKE $date '
-                            'ORDER BY nomnoms.time_stamp DESC', vars=request)
-        response_list = list(response)
-        return response_list
+        photo_sets = db.query(
+            'SELECT cycle_name, nomnoms.time_stamp, nomnoms.id, users.name '
+            'FROM nomnoms,users '
+            'WHERE nomnoms.user_id = users.id '
+            'AND DATE(nomnoms.time_stamp) LIKE $date '
+            'ORDER BY nomnoms.time_stamp DESC', vars=request)
+        photo_sets_filled = [fill_photo_set(photo_set) for photo_set in photo_sets]
+        return photo_sets_filled
     elif 'photo_set' in request:
         photos = db.select('photo',
                 where = 'nomnom_id = $photo_set',
@@ -53,9 +52,6 @@ def obj_from_photo_path(path):
     if groups[0]:
         # The date group matched
         request = {'date': groups[0]}
-    elif groups[1]:
-        # The photo_set group matched
-        request = {'photo_set': groups[1]}
     else:
         request = 'recent'
     return request

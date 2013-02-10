@@ -35,7 +35,8 @@ h1{
     color: #3c4044;
 }
 .thumbnail{
-    border-color: #3c4044;
+    /*border-color: #3c4044;*/
+    border: none;
     color: #ced1d4;
 }
 #login_form button{
@@ -104,4 +105,11 @@ h1{
 }
 .pad_box{
     padding: 10px;
+}
+.photo_set_label{
+    color: #ced1d4;
+    margin: 0 0 10px 25px;
+}
+.photo_set{
+    margin-bottom: 30px;
 }

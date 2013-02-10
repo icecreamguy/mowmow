@@ -1,5 +1,4 @@
 var photo_sets = []
-var photo_set_photos = {}
 var stats_template = $('#stats_template').html();
 
 $(document).ready(function() {
@@ -211,7 +210,7 @@ function show_photos_by_date(date){
     // Grab a list of the photos from the specified date. On success add them
     // into the photo display area
     $.getJSON('api/photo/date/' + date, function(photos_from_date){
-        current_photos = photos_from_date
+        photo_sets = photos_from_date
         parse_photos();
     });
 }
@@ -222,32 +221,13 @@ function init_photo_display(section_title){
 }
 
 function parse_photos(){
+    // Grab the templates
     var photo_set_template = $('#photo_set_template').html();
     var photo_template = $('#photo_template').html();
 
     // Iterate over the photo sets and add them to the photo display div
     $('#thumbs').append(Mustache.to_html(photo_set_template, photo_sets));
     $('#thumbs').fadeIn('slow');
-    
-    console.log(photo_sets);
-    for (var i = 0; i < photo_sets.length; i++) {
-        var photo_set_id = photo_sets[i].id;
-        $.getJSON('api/photo/photo_set/' + photo_set_id, function (photo_set) {
-            console.log(photo_set_id);
-            //$('#set_' + photo_set_id).append(Mustache.to_html(photo_template, photo_set));
-        });
-    }
-
-    // Fix for margin bug in Bootstrap thumbnail, by users 'brunolazzaro' and 'toze'
-    // on the bootstrap bug tracker
-    (function($){
-        $('.row-fluid ul.thumbnails li.span6:nth-child(2n + 3)')
-            .css('margin-left','0px');
-        $('.row-fluid ul.thumbnails li.span4:nth-child(3n + 4)')
-            .css('margin-left','0px');
-        $('.row-fluid ul.thumbnails li.span3:nth-child(4n + 5)')
-            .css('margin-left','0px'); 
-    })(jQuery);
 }
 
 function print_r(objects){
