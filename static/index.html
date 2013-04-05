@@ -41,30 +41,53 @@
                         <!-- Login Form -->
                         <form id="login_form"
                             class="small_margin_bottom logged_out">
-                            <input name="email_field" type="text" 
-                            placeholder="email address"
-                            class="span9">
-                            <input name="pass_field" type="password" 
-                                placeholder="password" class="span9">
+                            <input name="email_field" type="text" placeholder="email address" class="span9">
+                            <input name="pass_field" type="password" placeholder="password" class="span9">
                             <br>
-                            <button name="submit" class="btn">
-                                Login
-                            </button>
-                            <button id="new_account" class="btn">
-                                New Account
-                            </button>
-                            <hr>
+                            <button name="submit" class="btn"> Login </button>
+                            <button id="new_account" class="btn" data-toggle="collapse" data-target="#new-account-expander"> New Account </button>
                         </form>
+
                         <div id="loading_image_2">
                             <img src="img/loading.gif" alt="loading...">
                         </div>
                         <span id="user_err" class="label label-important hidden">
                         </span>
+                        <hr>
+
+                        <div id="new-account-expander" class="collapse">
+                            <div id="new_account_alert" class="alert fade in hidden">
+                                <h5>Please correct the following items:</h5>
+                                <span id="new_account_alert_text"></span>
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <i class="icon-remove"></i> 
+                                </button>
+                            </div>
+                            <label>Complete the form below to create your account</label>
+                            <form id="new_account_form">
+                                <fieldset>
+                                    <input name="name_field" type="text" placeholder="name">
+                                    <input name="email_field" type="text" placeholder="email address">
+                                    <input name="pass_field" type="password" placeholder="password">
+                                    <input name="pass_confirm_field" type="password" placeholder="confirm password">
+                                </fieldset>
+            
+                                <div id="tos">
+                                    <p><b>Terms of service:</b><br> This website if for friends and family. Feel free to use an alias instead of your real name if you would like. I'm not going to do anything with your email address, I just think it's easier to remember an email address as opposed to a username, plus no two people will choose the same username if your username is your email address. In the future maybe I'll put in a password reset function which will use it, but as of now it's really just your username.</p>
+                                    <p>I reserve the right to change these terms at any time, but under no circumstance will those changes ever include divulging your email address to any other party</p>
+                                    <p>By creating an account, you agree to be bound by these pretty relaxed terms :-)</p>
+                                    <button name="submit" aria-hidden="true" class="btn btn-primary">
+                                        <i class="icon-check"></i> Create Account
+                                    </button>
+                                </div>
+                            </form>
+                        <hr>
+                        </div>
+
                     </div>
+
                     <div class="sidebar-nav">
-                        <button class="btn medium_margin_bottom btn-block"
-                            data-toggle="collapse" data-target="#about_container">
-                            <i class='icon-question-sign'></i>
+                        <button class="btn medium_margin_bottom btn-block" data-toggle="collapse" data-target="#about_container"> <i class='icon-question-sign'></i>
                             How Does This Site Work?
                         </button>
                         <div id="about_container" class="collapse">
@@ -78,16 +101,13 @@
                             excited she gets!
                             </div>
                         </div>
-                        <button class="btn btn-block" data-toggle="collapse"
-                            data-target="#date-picker-container">
+                        <button class="btn btn-block" data-toggle="collapse" data-target="#date-picker-container">
                             <i class='icon-calendar'></i>
                             Browse Photos by Date
                         </button>
                         <div id="date-picker-container" class="collapse">
                             <i class='icon-arrow-left'></i>
-                            <a href="#" id="show_recent_photos"
-                                class="btn-link medium_margin_bottom
-                                medium_margin_top">
+                            <a href="#" id="show_recent_photos" class="btn-link medium_margin_bottom medium_margin_top">
                                 Back to most recent
                             </a>
                             <span id="date_picker"></span>
@@ -116,8 +136,7 @@
                 <span class="span2"></span>
             </div>
         </div> <!-- !Bootstrap container -->
-        <div id="feedresult_modal" class="modal hidden fade" tabindex="-1"
-            role="dialog" aria-labelledby="feedresult_label" aria-hidden="true">
+        <div id="feedresult_modal" class="modal hidden fade" tabindex="-1" role="dialog" aria-labelledby="feedresult_label" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <i class="icon-remove"></i> 
@@ -134,8 +153,7 @@
             </div>
         </div>
 
-        <div id="photo_modal" class="modal hidden fade" tabindex="-1" role="dialog"
-            aria-labelledby="photo_label" aria-hidden="true">
+        <div id="photo_modal" class="modal hidden fade" tabindex="-1" role="dialog" aria-labelledby="photo_label" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <i class="icon-remove"></i> 
@@ -152,41 +170,6 @@
             </div>
         </div>
 
-        <div id="new_account_modal" class="modal hidden fade" tabindex="-1"
-            role="dialog" aria-labelledby="new_account_label" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="icon-remove"></i> 
-                </button>
-                <h3 id="new_account_label">Create a New Account</h3>
-            </div>
-            <div class="modal-body">
-                <div id="new_account_alert" class="alert fade in hidden">
-                    <h5>Please correct the following items:</h5>
-                    <span id="new_account_alert_text"></span>
-                    <button type="button" class="close" data-dismiss="alert">
-                        <i class="icon-remove"></i> 
-                    </button>
-                </div>
-                <form id="new_account_form">
-                    <input name="name_field" type="text" 
-                            placeholder="name">
-                    <input name="email_field" type="text" 
-                            placeholder="email address">
-                    <input name="pass_field" type="password" placeholder="password">
-                    <input name="pass_confirm_field" type="password" 
-                        placeholder="confirm password">
-                    <div id="tos">
-                        <p>Terms of service: This website if for friends and family. Feel free to use an alias instead of your real name if you would like. I'm not going to do anything with your email address, I just think it's easier to remember an email address as opposed to a username, plus no two people will choose the same username if your username is your email address. In the future maybe I'll put in a password reset function which will use it, but as of now it's really just your username. Furthermore, as far as your security goes, your pasword (transmitted over HTTPS) will not be stored on this system, only a cryptographic hash of it will be kept. This means that neither I nor anyone else could figure out your password before the sun burns out, even with full access to the password database. For more details see the "Source Code" link at the bottom of this page</p>
-                        <p>I reserve the right to change these terms at any time, but under no circumstance will those changes ever include divulging your email address to any other party</p>
-                        <p>By creating an account, you agree to be bound by these pretty relaxed terms :-)</p>
-                    </div>
-                    <button name="submit" aria-hidden="true"
-                        class="btn">
-                        <i class="icon-check"></i> Create Account
-                    </button>
-                </form>
-            </div>
             <div class="modal-footer">
                 <div id="loading_image_3" class="pull-left">
                     <img src="img/loading.gif" alt="loading...">
@@ -195,7 +178,6 @@
                     <i class="icon-remove"></i> Close
                 </button>
             </div>
-        </div>
 
         <!-- Templates -->
         <script id="photo_template" type="text/template">
