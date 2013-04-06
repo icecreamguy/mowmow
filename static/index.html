@@ -44,8 +44,8 @@
                             <input name="email_field" type="text" placeholder="email address" class="span9">
                             <input name="pass_field" type="password" placeholder="password" class="span9">
                             <br>
-                            <button name="submit" class="btn"> Login </button>
-                            <button id="new_account" class="btn" data-toggle="collapse" data-target="#new-account-expander"> New Account </button>
+                            <button name="submit" class="btn" type="submit"> Login </button>
+                            <button id="new-account" type="button" class="btn" data-toggle="collapse" data-target="#new-account-expander"> New Account </button>
                         </form>
 
                         <div id="loading_image_2">
@@ -59,9 +59,6 @@
                             <div id="new_account_alert" class="alert fade in hidden">
                                 <h5>Please correct the following items:</h5>
                                 <span id="new_account_alert_text"></span>
-                                <button type="button" class="close" data-dismiss="alert">
-                                    <i class="icon-remove"></i> 
-                                </button>
                             </div>
                             <label>Complete the form below to create your account</label>
                             <form id="new_account_form">
@@ -170,14 +167,29 @@
             </div>
         </div>
 
+        <div class="modal-footer">
+            <div id="loading_image_3" class="pull-left">
+                <img src="img/loading.gif" alt="loading...">
+            </div>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">
+                <i class="icon-remove"></i> Close
+            </button>
+        </div>
+
+        <div id="new-account-confirm-modal" class="modal hidden fade" tabindex="-1" role="dialog" aria-labelledby="new-account-label" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="icon-remove"></i> 
+                </button>
+                <h3 id="new-account-modal">Account Status</h3>
+            </div>
+            <div class="modal-body">Account Created!</div>
             <div class="modal-footer">
-                <div id="loading_image_3" class="pull-left">
-                    <img src="img/loading.gif" alt="loading...">
-                </div>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">
                     <i class="icon-remove"></i> Close
                 </button>
             </div>
+        </div>
 
         <!-- Templates -->
         <script id="photo_template" type="text/template">

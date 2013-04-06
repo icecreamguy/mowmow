@@ -96,12 +96,20 @@ $(document).ready(function() {
                 $('#new_account_alert_text').append(Mustache.to_html(alert_template,
                         data));
                 $('#new_account_alert').show();
+                // Scroll up to the error list
+                $('html, body').animate({
+                    scrollTop: $('#new_account_alert_text').offset().top - 100
+                }, 200);
                 $('#loading_image_3').hide();
             }
             else{
-                $('#new_account_alert').hide();
-                $('#new_account_modal').modal('hide');
+                $('#new_account_alert').alert('close');
+                $('#new-account-expander').collapse();
                 $('#user_confirm').html(data.message).fadeIn();
+                $('#new-account-confirm-modal').modal();
+                $('html, body').animate({
+                    scrollTop: $('body').offset().top - 60
+                }, 200);
                 $.cookies.set('auth_token', data.token);
                 $('#loading_image_3').hide();
                 setup();
@@ -117,12 +125,6 @@ $(document).ready(function() {
         index = $(this).children('img').attr('data-photo_id');
         label = $(this).children('span').html();
         show_photo(current_photos[index])
-    });
-
-    // Click handler to diplay the new account modal
-    $('#new_account').click(function () {
-        $('#new_account_modal').modal('show');
-        return false;
     });
 
     //Update the recent photos area on page load
