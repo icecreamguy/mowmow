@@ -241,7 +241,7 @@ def create_account(account_data):
                    "z0-9])?")
 
     # Check if it's a valid email address
-    if not re.compile(email_regex).match(account_data.email_field):
+    if not re.compile(email_regex).match(account_data.email_field.lower()):
         account_creation_state['message'].append('Invalid email format')
 
     # Make sure the passords match
@@ -252,16 +252,23 @@ def create_account(account_data):
     if len(account_data.name_field) > 70:
         account_creation_state['message'].append('Name needs to be less than 70 characters')
 
-    # If everything validates, make sure that the email address hasn't already been
-    # registered.
+    # If everything validates, make sure that the email address and username haven't
+    # already been registered. Only do this after validation to keep db queries low
     if (not len(account_creation_state['message'])) and len(account_data.name_field):
-        accounts = db.select('users', account_data,
-            where = 'email = $email_field'
+        emails = db.select('users', account_data,
+            where = 'email LIKE $email_field'
         )
-        if accounts:
+        if len(emails):
             account_creation_state['message'].append('Email address already registered, contact '
-                                       'site owner to reset it, or use a different '
+                                       'Julius to reset it, or use a different '
                                        'email address')
+        accounts = db.select('users', account_data,
+            where = 'name LIKE $name_field'
+        )
+        if len(accounts):
+            account_creation_state['message'].append('Username already taken, please choose '
+                                       'a different one. Sorry!')
+
 
     # If there were any validation account_creation_state, exit here and provide them
     if len(account_creation_state['message']):

@@ -1,5 +1,6 @@
 var current_photos = "";
 var stats_template = $('#stats_template').html();
+var new_account_submitted = false;
 
 $(document).ready(function() {
     // Pull as much as possible out of the DOM into variables
@@ -87,6 +88,10 @@ $(document).ready(function() {
     });
 
     $('#new_account_form').submit(function () {
+            if (new_account_submitted){
+                return false;
+            }
+            new_account_submitted = true
         $('#loading_image_3').show();
         $.post('api/login/new', $(this).serialize(), function (data) {
             if (data.problems){
@@ -101,6 +106,7 @@ $(document).ready(function() {
                     scrollTop: $('#new_account_alert_text').offset().top - 100
                 }, 200);
                 $('#loading_image_3').hide();
+                new_account_submitted = false;
             }
             else{
                 $('#new_account_alert').alert('close');
@@ -112,6 +118,7 @@ $(document).ready(function() {
                 }, 200);
                 $.cookies.set('auth_token', data.token);
                 $('#loading_image_3').hide();
+                new_account_submitted = false;
                 setup();
             }
         }, "json");
