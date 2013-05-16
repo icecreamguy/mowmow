@@ -8,9 +8,9 @@ import time
 import json
 import config
 from config import nom_cycles
-import serial
 import camowra
 from web import utils
+from feeder import feeder
 
 # Two capture groups - the date string and the number of recent photos. Only one
 # group is active at a time. Example strings:
@@ -191,32 +191,32 @@ def feed_cycle(data, date_strings, auth_token, external=False):
                 user_id = status.user_id)
 
         #Feed the baileycat
-        activate_feeder()
+        foodmotron = feeder()
+        feeder_result = foodmotron.feed()
+        if feeder_result != "OK":
+            print("Feeding failed!")
+            db.delete('nomnoms',
+                    where = "id=$nomnom_id",
+                    vars = dict(nomnom_id = nomnom_id))
+            nomnom_result = {'result': 'Crap - some sort of technical difficulty!\
+                    You can try again or get in touch with Julius - tell him his\
+                    cat is pissed!'}
+        else:
 
-        # Fire up the camera!
-        camera = camowra.init_camera()
+            # Fire up the camera!
+            camera = camowra.init_camera()
 
-        # Grab a set of photos
-        camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
-                status.cycle_name, nomnom_id)
+            # Grab a set of photos
+            camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
+                    status.cycle_name, nomnom_id)
 
-        # delete the camera object
-        del(camera)
+            # delete the camera object
+            del(camera)
+
+            nomnom_result = {'result': 'Bailey fed! Check the photos to make sure\
+                    she\'s still adorable. Which she is. Duh.'}
 
         return json.dumps(nomnom_result)
-
-# This function is ugly as hell right now, but I have an actual need to feed Bailey
-# on vacation, so i'm leaving it as-is for now
-def activate_feeder():
-    serial_port = serial.Serial('/dev/ttyUSB0')
-
-    serial_port.write('\xff\x01\x01')
-    time.sleep(1)
-    serial_port.write('\xff\x01\x00')
-    time.sleep(1)
-    serial_port.write('\xff\x01\x01')
-    time.sleep(1)
-    serial_port.write('\xff\x01\x00')
 
 # Function to validate and create a new account
 def create_account(account_data):

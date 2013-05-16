@@ -11,8 +11,15 @@ db = database(dbn='mysql', user='mowmow', pw='CHANGE_ME',
 img_root = 'static/img/mrow'
 dir_base, api_path = path.split(path.dirname(__file__))
 
-camera_port = 0
+camera_port = 1
 compression_settings = [int(CV_IMWRITE_PNG_COMPRESSION), 9]
+
+# Feeder types so far are:
+#   arduino - This is for my custom little arduino program
+#   sain_relay - This is for a Sain USB RS232 relay
+feeder_type = 'arduino'
+# serial_port = '/dev/ttyUSB0'
+serial_port = '/dev/ttyACM0'
 
 # web.storage object to store the feeding times. There are one or more feeding
 # cycles. You can call each time anything. Each cycle must have a "start" and an

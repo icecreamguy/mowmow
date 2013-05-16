@@ -55,8 +55,7 @@ $(document).ready(function() {
                 $('#feedresult_modal').modal('show');
             }
             else{
-                $('#feedresult_text').html('Bailey fed! Check the photos to make\
-                    sure she\'s still adorable. Which she is. Duh.');
+                $('#feedresult_text').html(result.result);
                 $('#feedresult_modal').modal('show');
                 update_recent_photos();
             }
