@@ -11,6 +11,7 @@ from config import nom_cycles
 import serial
 import camowra
 from web import utils
+from urllib2 import URLError
 
 # Two capture groups - the date string and the number of recent photos. Only one
 # group is active at a time. Example strings:
@@ -197,11 +198,20 @@ def feed_cycle(data, date_strings, auth_token, external=False):
         camera = camowra.init_camera()
 
         # Grab a set of photos
-        camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
+        try:
+            camowra.generate_image_set(4, img_folder, date_strings, 3, camera,
                 status.cycle_name, nomnom_id)
-
-        # delete the camera object
-        del(camera)
+        except URLError:
+            print("Can't communicate with camera!")
+            db.delete('nomnoms',
+                where='id = $nomnom_id',
+                vars={'nomnom_id':nomnom_id}
+            )
+            return json.dumps({'result': 'cam_error'})
+        finally:
+            if (config.camera_type == 'usb'):
+                # delete the camera object
+                del(camera)
 
         return json.dumps(nomnom_result)
 
