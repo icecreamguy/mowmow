@@ -54,6 +54,10 @@ $(document).ready(function() {
                     first');
                 $('#feedresult_modal').modal('show');
             }
+            else if (result.result == 'cam_error') {
+                $('#feedresult_text').html('Oh crap, can\'t communicate with camera!')
+                $('#feedresult_modal').modal('show');
+            }
             else{
                 $('#feedresult_text').html('Bailey fed! Check the photos to make\
                     sure she\'s still adorable. Which she is. Duh.');
