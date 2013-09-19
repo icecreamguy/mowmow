@@ -1,6 +1,14 @@
 from web import database, utils
 from os import path
 
+# Enable this to to allow the system to operate without the hardware connected,
+# e.g. for testing purposes
+ignore_hardware = False
+
+# Set this to the serial port you OS exposes the Arduino as. Usually 
+# /dev/ttyUSB0 for older models and /dev/ttyACM0 for Uno and newer
+serial_port = "/dev/ttyACM0"
+
 # I have never been able to get this value to import properly from OpenCV,
 # so it is manually defined here
 CV_IMWRITE_PNG_COMPRESSION = 16

@@ -218,7 +218,13 @@ def feed_cycle(data, date_strings, auth_token, external=False):
 # This function is ugly as hell right now, but I have an actual need to feed Bailey
 # on vacation, so i'm leaving it as-is for now
 def activate_feeder():
-    serial_port = serial.Serial('/dev/ttyUSB0')
+    print("Activating feeder...")
+
+    if config.ignore_hardware:
+        print("Ignore hardware set, aborting")
+        return
+
+    serial_port = serial.Serial(config.serial_port)
 
     serial_port.write('\xff\x01\x01')
     time.sleep(1)
@@ -227,6 +233,8 @@ def activate_feeder():
     serial_port.write('\xff\x01\x01')
     time.sleep(1)
     serial_port.write('\xff\x01\x00')
+
+    return
 
 # Function to validate and create a new account
 def create_account(account_data):

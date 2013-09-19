@@ -61,12 +61,11 @@ def generate_image_set(image_count, img_directory, date_strings, sleep_time,
         filename = ('kitteh-' + date_strings.current_time + '-' + str(image_count) + ".png")
         file = os.path.join(dir_base, img_directory, filename)
 
-        # A nice feature of the SaveImage method is that it will automatically
-        # choose the correct format based on the file extension you provide.
-        # Convenient!
         print('writing image to file: %s' % file)
         # Use the opencv save for USB cam, PIL for HTTP cam
         if (config.camera_type == 'usb'):
+            # Opencv will automatically convert to PNG based on the file
+            # extension
             cv2.imwrite(file, camera_capture, config.compression_settings)
         else:
             camera_capture.save(file, optimize=True)
