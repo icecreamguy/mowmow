@@ -215,8 +215,6 @@ def feed_cycle(data, date_strings, auth_token, external=False):
 
         return json.dumps(nomnom_result)
 
-# This function is ugly as hell right now, but I have an actual need to feed Bailey
-# on vacation, so i'm leaving it as-is for now
 def activate_feeder():
     print("Activating feeder...")
 
@@ -224,15 +222,14 @@ def activate_feeder():
         print("Ignore hardware set, aborting")
         return
 
-    serial_port = serial.Serial(config.serial_port)
+    serial_port = serial.Serial(
+            config.serial_port,
+            baudrate=config.serial_baudrate
+    )
 
-    serial_port.write('\xff\x01\x01')
-    time.sleep(1)
-    serial_port.write('\xff\x01\x00')
-    time.sleep(1)
-    serial_port.write('\xff\x01\x01')
-    time.sleep(1)
-    serial_port.write('\xff\x01\x00')
+    # CMDMessenger is running on the Arduino, with the feeding routine in
+    # slot 4
+    serial_port.write('4;')
 
     return
 
