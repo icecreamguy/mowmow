@@ -227,6 +227,9 @@ def activate_feeder():
             baudrate=config.serial_baudrate
     )
 
+    # Wait for the Arduino to reinitialize
+    time.sleep(2)
+
     # CMDMessenger is running on the Arduino, with the feeding routine in
     # slot 4
     serial_port.write('4;')
