@@ -77,7 +77,7 @@ $(document).ready(function() {
         $('#loading_image_2').show();
         $.post('api/login/existing', $(this).serialize(), function (token) {
             if (token != 'false') {
-                $.cookies.set('auth_token', token);
+                $.cookies.set('auth_token', token, {expires: 90});
                 $('#user_confirm').html('Logged in!').show().fadeOut(2000);
                 $('#user_err').hide();
                 setup();
@@ -177,9 +177,6 @@ function update_recent_photos(){
 function setup(){
     $.getJSON('api/status', function(mow_status){
         var status_template = $('#status_template').html();
-
-        //if (mow_status.lock){ mow_status.lock = 'No'; }
-        //else{ mow_status.lock = 'Yes'; }
 
         mow_status.last_nomtime = new Date(Date.parse(mow_status.last_nomtime));
         mow_status.last_nomtime = mow_status.last_nomtime.toLocaleTimeString() +
