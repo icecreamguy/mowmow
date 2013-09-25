@@ -14,7 +14,7 @@ $(document).ready(function() {
     var loading_img = $('#loading_img');
     var thumbnails_list = $('#thumbs');
     var hidden_elements = $('.hidden');
-    var auth_token = $.cookies.get('auth_token');
+    var auth_token = $.cookie('auth_token');
     var logout_button = $('#logout');
     
     hidden_elements.hide();
@@ -77,7 +77,7 @@ $(document).ready(function() {
         $('#loading_image_2').show();
         $.post('api/login/existing', $(this).serialize(), function (token) {
             if (token != 'false') {
-                $.cookies.set('auth_token', token, {expires: 90});
+                $.cookie('auth_token', token, {expires: 90, path: '/'});
                 $('#user_confirm').html('Logged in!').show().fadeOut(2000);
                 $('#user_err').hide();
                 setup();
@@ -120,7 +120,7 @@ $(document).ready(function() {
                 $('html, body').animate({
                     scrollTop: $('body').offset().top - 60
                 }, 200);
-                $.cookies.set('auth_token', data.token);
+                $.cookie('auth_token', token, {expires: 90, path: '/'});
                 $('#loading_image_3').hide();
                 new_account_submitted = false;
                 setup();
@@ -157,7 +157,7 @@ function logout_user(auth_token) {
         }
 
     });
-    $.cookies.del('auth_token');
+    $.cookie('auth_token');
     setup();
 }
 
