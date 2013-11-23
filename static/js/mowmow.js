@@ -38,6 +38,9 @@ $(document).ready(function() {
         // key of "capture" it will take a photo. The value doesn't actually do
         // anything
         loading_img.show();
+        $('html, body').animate({
+            scrollTop: $(loading_img).offset().top - 5
+        }, 200);
         $.post('api/nomnom', { feed: 1 }, function(data){
             // After we get a (hopfully successful) response back, load/reload the
             // recent photos area.
